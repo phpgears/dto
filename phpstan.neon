@@ -1,0 +1,15 @@
+includes:
+  - vendor/phpstan/phpstan-strict-rules/rules.neon
+  - vendor/phpstan/phpstan-phpunit/extension.neon
+  - vendor/phpstan/phpstan-phpunit/rules.neon
+  - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+  - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+
+parameters:
+  level: max
+  paths:
+    - src
+  ignoreErrors:
+    - '/^In method ".+\\AbstractScalarDTO::setPayload", parameter \$parameters type is "array"\. Please provide a @param annotation to further specify the type of the array\. For instance: @param int\[\] \$parameters$/'
+    - '/^Method .+\\AbstractScalarDTO::get\(\) has no return typehint specified\.$/'
+    - '/^Method .+\\AbstractScalarDTO::getPayload\(\) should return array<string, mixed> but returns array<int|string, mixed>\.$/'
