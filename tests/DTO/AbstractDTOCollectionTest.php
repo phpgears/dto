@@ -52,6 +52,7 @@ class AbstractDTOCollectionTest extends TestCase
 
         $this->assertTrue($stub->has('elements'));
         $this->assertSame($elements, \iterator_to_array($stub->get('elements')));
+        $this->assertSame($elements, \iterator_to_array($stub->getElements()));
         $this->assertSame($elements, \iterator_to_array($stub->getIterator()));
     }
 }

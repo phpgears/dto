@@ -17,6 +17,8 @@ use Gears\DTO\AbstractScalarDTO;
 
 /**
  * AbstractScalarDTO stub class.
+ *
+ * @method getParameter(): int
  */
 class AbstractScalarDTOStub extends AbstractScalarDTO
 {

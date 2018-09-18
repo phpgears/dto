@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\DTO;
 
+use Gears\DTO\Exception\InvalidMethodCallException;
 use Gears\DTO\Exception\InvalidParameterException;
 
 /**
@@ -117,5 +118,40 @@ trait PayloadBehaviour
     protected function getParameterTransformerMethod(string $parameter): string
     {
         return 'output' . \ucfirst($parameter);
+    }
+
+    /**
+     * Magic getters call.
+     *
+     * @param string  $methodName
+     * @param mixed[] $arguments
+     *
+     * @throws InvalidMethodCallException
+     * @throws InvalidParameterException
+     *
+     * @return mixed
+     */
+    final public function __call(string $methodName, array $arguments)
+    {
+        if (!\preg_match('/^(has|get)([A-Z][a-zA-Z0-9-_]*)$/', $methodName, $matches)) {
+            throw new InvalidMethodCallException(\sprintf('Method %s::%s does not exist', static::class, $methodName));
+        }
+
+        if (\count($arguments) !== 0) {
+            throw new InvalidMethodCallException(\sprintf(
+                '%s::%s method should be called with no parameters',
+                static::class,
+                $methodName
+            ));
+        }
+
+        $method = $matches[1];
+        $parameter = $matches[2];
+
+        if ($this->has($parameter)) {
+            return $method === 'has' ? true : $this->get($parameter);
+        }
+
+        return $method === 'has' ? $this->has(\lcfirst($parameter)) : $this->get(\lcfirst($parameter));
     }
 }

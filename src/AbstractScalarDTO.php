@@ -20,8 +20,9 @@ use Gears\Immutability\ImmutabilityBehaviour;
  */
 abstract class AbstractScalarDTO implements DTO
 {
-    use ImmutabilityBehaviour;
-    use ScalarPayloadBehaviour;
+    use ImmutabilityBehaviour, ScalarPayloadBehaviour {
+        ScalarPayloadBehaviour::__call insteadof ImmutabilityBehaviour;
+    }
 
     /**
      * AbstractSerializableDTO constructor.

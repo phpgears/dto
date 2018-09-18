@@ -21,11 +21,11 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractDTOTest extends TestCase
 {
-    public function testCreationFromArray(): void
+    public function testCreation(): void
     {
         $stub = AbstractDTOStub::fromArray(['parameter' => 100]);
 
-        $this->assertTrue($stub->has('parameter'));
         $this->assertSame(100, $stub->get('parameter'));
+        $this->assertSame(100, $stub->getParameter());
     }
 }

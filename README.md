@@ -66,6 +66,11 @@ DTO constructors are declared protected forcing you to create "named constructor
 ```php
 use Gears\DTO\AbstractDTO;
 
+/**
+ * @method getName(): string
+ * @method getLastname(): string
+ * @method getDate(): \DateTimeImmutable
+ */
 class MyDTO extends AbstractDTO
 {
     public static function createFromXXX(
@@ -85,6 +90,8 @@ class MyDTO extends AbstractDTO
 `Gears\DTO\AbstractScalarDTO` ensures all payload is either a scalar value (null, string, int, float or bool) or an array of scalar values. It is the perfect match to create Domain Events, or CQRS commands/queries
 
 Finally `Gears\DTO\AbstractDTOCollection` is a special type of DTO that only accepts a list of elements, being this elements implementations of DTO interface itself. This object is meant to be used as a return value when several DTOs should be returned, for example from a DDBB request
+
+You can take advantage of magic method __call on DTO objects to access properties. If you plan to use this feature it's best to annotate this magic accessors at class level with `@method` phpDoc tag, this will help you're IDE autocompletion
 
 ## Contributing
 

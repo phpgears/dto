@@ -23,10 +23,15 @@ class PayloadBehaviourTest extends TestCase
 {
     public function testDirectPayload(): void
     {
-        $stub = new PayloadBehaviourStub(['parameter' => 100]);
+        $stub = new PayloadBehaviourStub(['Parameter' => 100, 'argument' => 'value']);
 
-        $this->assertTrue($stub->has('parameter'));
-        $this->assertSame(100, $stub->get('parameter'));
+        $this->assertTrue($stub->has('Parameter'));
+        $this->assertSame(100, $stub->get('Parameter'));
+        $this->assertSame(100, $stub->getParameter());
+
+        $this->assertTrue($stub->has('argument'));
+        $this->assertSame('value', $stub->get('argument'));
+        $this->assertSame('value', $stub->getArgument());
     }
 
     public function testPayloadParsing(): void
@@ -47,5 +52,27 @@ class PayloadBehaviourTest extends TestCase
         $stub = new PayloadBehaviourStub([]);
 
         $stub->get('attribute');
+    }
+
+    /**
+     * @expectedException \Gears\DTO\Exception\InvalidMethodCallException
+     * @expectedExceptionMessageRegExp /^Method .+::unknownMethod does not exist$/
+     */
+    public function testUnknownMethod(): void
+    {
+        $stub = new PayloadBehaviourStub([]);
+
+        $stub->unknownMethod();
+    }
+
+    /**
+     * @expectedException \Gears\DTO\Exception\InvalidMethodCallException
+     * @expectedExceptionMessageRegExp /^.+::getParameter method should be called with no parameters$/
+     */
+    public function testInvalidMethodArguments(): void
+    {
+        $stub = new PayloadBehaviourStub([]);
+
+        $stub->getParameter('none');
     }
 }

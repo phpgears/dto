@@ -17,6 +17,8 @@ use Gears\DTO\AbstractDTO;
 
 /**
  * AbstractDTOS stub class.
+ *
+ * @method getParameter(): int
  */
 class AbstractDTOStub extends AbstractDTO
 {

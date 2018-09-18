@@ -21,18 +21,12 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractScalarDTOTest extends TestCase
 {
-    public function testScalar(): void
+    public function testCreation(): void
     {
-        $stub = AbstractScalarDTOStub::fromArray(['parameter' => 'serializable']);
+        $stub = AbstractScalarDTOStub::fromArray(['parameter' => 100]);
 
-        $this->assertSame('serializable', $stub->get('parameter'));
-    }
-
-    public function testScalarDTO(): void
-    {
-        $stub = AbstractScalarDTOStub::fromArray(['parameter' => 'serializable']);
-
-        $this->assertSame('serializable', $stub->get('parameter'));
+        $this->assertSame(100, $stub->get('parameter'));
+        $this->assertSame(100, $stub->getParameter());
     }
 
     /**

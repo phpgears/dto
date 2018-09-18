@@ -22,8 +22,10 @@ use Gears\Immutability\ImmutabilityBehaviour;
  */
 abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregate
 {
-    use ImmutabilityBehaviour;
-    use PayloadBehaviour;
+    use ImmutabilityBehaviour, PayloadBehaviour {
+        PayloadBehaviour::__call insteadof ImmutabilityBehaviour;
+        __call as private payloadCall;
+    }
 
     /**
      * DTOCollection constructor.
@@ -50,9 +52,17 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
     /**
      * {@inheritdoc}
      */
+    public function getElements(): \Traversable
+    {
+        return $this->get('elements');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     final public function getIterator(): \Traversable
     {
-        return $this->outputElements($this->payload['elements']);
+        return $this->get('elements');
     }
 
     /**

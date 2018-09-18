@@ -18,8 +18,10 @@ use Gears\DTO\PayloadBehaviour;
 /**
  * PayloadBehaviour trait stub class.
  *
- * @method bool hasParameter
- * @method int  getParameter
+ * @method hasParameter(): bool
+ * @method hasArgument(): bool
+ * @method getParameter(): int
+ * @method getArgument(): string
  */
 class PayloadBehaviourStub
 {

@@ -28,6 +28,13 @@ interface DTOCollection extends DTO
     public static function fromElements(array $elements): self;
 
     /**
+     * Get elements as traversable.
+     *
+     * @return \Traversable
+     */
+    public function getElements(): \Traversable;
+
+    /**
      * Get traversable from collection.
      *
      * @return \Traversable

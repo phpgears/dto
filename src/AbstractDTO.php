@@ -20,8 +20,9 @@ use Gears\Immutability\ImmutabilityBehaviour;
  */
 abstract class AbstractDTO implements DTO
 {
-    use ImmutabilityBehaviour;
-    use PayloadBehaviour;
+    use ImmutabilityBehaviour, PayloadBehaviour {
+        PayloadBehaviour::__call insteadof ImmutabilityBehaviour;
+    }
 
     /**
      * AbstractDTO constructor.
