@@ -99,13 +99,7 @@ trait PayloadBehaviour
      */
     final public function getPayload(): array
     {
-        $payload = [];
-
-        foreach (\array_keys($this->payload) as $parameter) {
-            $payload[$parameter] = $this->get($parameter);
-        }
-
-        return $payload;
+        return $this->payload;
     }
 
     /**

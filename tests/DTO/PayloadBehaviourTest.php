@@ -40,7 +40,8 @@ class PayloadBehaviourTest extends TestCase
 
         $this->assertTrue($stub->has('value'));
         $this->assertSame('myvalue', $stub->get('value'));
-        $this->assertSame(['value' => 'myvalue'], $stub->getPayload());
+
+        $this->assertSame(['value' => 'myValue'], $stub->getPayload());
     }
 
     /**
