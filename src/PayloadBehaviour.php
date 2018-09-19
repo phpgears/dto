@@ -139,8 +139,7 @@ trait PayloadBehaviour
             ));
         }
 
-        $method = $matches[1];
-        $parameter = $matches[2];
+        [$method, $parameter] = \array_slice($matches, 1);
 
         if ($this->has($parameter)) {
             return $method === 'has' ? true : $this->get($parameter);
