@@ -34,16 +34,18 @@ Require composer autoload file
 require './vendor/autoload.php';
 ```
 
-You can use ImmutabilityBehaviour and PayloadBehaviour in any object you want to have DTO functionality
+You can use ImmutabilityBehaviour and PayloadBehaviour in any object you want to have immutable DTO functionality
 
 ```php
 use Gears\Immutability\ImmutabilityBehaviour;
+use Gears\DTO\DTO;
 use Gears\DTO\PayloadBehaviour;
 
-class MyDTO implements MyDTOInterface
+class MyDTO implements DTO, MyDTOInterface
 {
-    use ImmutabilityBehaviour;
-    use PayloadBehaviour;
+    use ImmutabilityBehaviour, PayloadBehaviour {
+        PayloadBehaviour::__call insteadof ImmutabilityBehaviour;
+    }
 
     public function __construct(array $parameters)
     {
@@ -54,44 +56,55 @@ class MyDTO implements MyDTOInterface
 
     final public function getAllowedInterfaces(): array
     {
-        return [MyDTOInterface::class];
+        return [DTO::class, MyDTOInterface::class];
     }
 }
 ```
 
-Even better this boilerplate is already in place for you by extending `Gears\DTO\AbstractDTO` or `Gears\DTO\AbstractScalarDTO` classes
+If you just need a plain DTO object it gets a lot easier, this boilerplate code is already in place for you by extending `Gears\DTO\AbstractDTO` or `Gears\DTO\AbstractScalarDTO` classes
 
-DTO constructors are declared protected forcing you to create "named constructors", this have a very useful feature, you get to typehint your DTO parameters
+Constructors are declared protected forcing you to create "named constructors", this have a very useful side effect, you get to type-hint all your DTO parameters
 
 ```php
-use Gears\DTO\AbstractDTO;
+use Gears\DTO\AbstractScalarDTO;
 
 /**
+ * @method hasName(): bool
  * @method getName(): string
+ * @method hasLastname(): bool
  * @method getLastname(): string
+ * @method hasDate(): bool
  * @method getDate(): \DateTimeImmutable
  */
-class MyDTO extends AbstractDTO
+class MyDTO extends AbstractScalarDTO
 {
-    public static function createFromXXX(
-        string $name, 
-        string $lastName, 
+    public static function instantiate(
+        string $name,
+        string $lastName,
         \DateTimeImmutable $date
     ): self {
-        return new $this([
+        return new static([
             'name' => $name,
             'lastName' => $lastName,
-            'date' => $date->setTimezone(new \DateTimeZone('UTC')),
+            'date' => $date->setTimezone(new \DateTimeZone('UTC'))->format('U'),
         ]);
+    }
+
+    /**
+     * Transforms 'date' parameter every time it is accessed.
+     */
+    protected function outputDate(string $date): \DateTimeImmutable
+    {
+        return DateTimeImmutable::createFromFormat('U', $date);
     }
 }
 ```
 
-`Gears\DTO\AbstractScalarDTO` ensures all payload is either a scalar value (null, string, int, float or bool) or an array of scalar values. It is the perfect match to create Domain Events, or CQRS commands/queries
+The difference between `Gears\DTO\AbstractDTO` and `Gears\DTO\AbstractScalarDTO` is that the later ensures all payload is either a scalar value (null, string, int, float or bool) or an array of scalar values. It's purpose is to ensure the DTO can be securely serialized, it is the perfect match to create Domain Events, or CQRS Command/Query. Other than that both classes are exactly the same
 
 Finally `Gears\DTO\AbstractDTOCollection` is a special type of DTO that only accepts a list of elements, being this elements implementations of DTO interface itself. This object is meant to be used as a return value when several DTOs should be returned, for example from a DDBB request
 
-You can take advantage of magic method __call on DTO objects to access properties. If you plan to use this feature it's best to annotate this magic accessors at class level with `@method` phpDoc tag, this will help you're IDE autocompletion
+You can take advantage of magic method __call on DTO objects to access parameters. If you plan to use this feature it's best to annotate this magic accessors at class level with `@method` phpDoc tag, this will help you're IDE auto-completion
 
 ## Contributing
 
