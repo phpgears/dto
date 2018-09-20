@@ -23,7 +23,7 @@
   "prefer-stable": true,
   "require": {
     "php": "^7.1",
-    "phpgears/immutability": "0.1"
+    "phpgears/immutability": "^0.1"
   },
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.1",
