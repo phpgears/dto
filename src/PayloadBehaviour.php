@@ -24,14 +24,14 @@ trait PayloadBehaviour
     /**
      * @var mixed[]
      */
-    protected $payload = [];
+    private $payload = [];
 
     /**
      * Set payload.
      *
      * @param array<string, mixed> $parameters
      */
-    final protected function setPayload(array $parameters): void
+    private function setPayload(array $parameters): void
     {
         $this->payload = [];
 
@@ -46,7 +46,7 @@ trait PayloadBehaviour
      * @param string $parameter
      * @param mixed  $value
      */
-    final protected function setPayloadParameter(string $parameter, $value): void
+    private function setPayloadParameter(string $parameter, $value): void
     {
         $this->payload[$parameter] = $value;
     }

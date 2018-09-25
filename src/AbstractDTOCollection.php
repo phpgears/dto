@@ -52,7 +52,7 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
     /**
      * {@inheritdoc}
      */
-    public function getElements(): \Traversable
+    final public function getElements(): \Traversable
     {
         return $this->get('elements');
     }

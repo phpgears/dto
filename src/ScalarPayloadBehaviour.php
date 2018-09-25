@@ -30,11 +30,11 @@ trait ScalarPayloadBehaviour
      * @param string $parameter
      * @param mixed  $value
      */
-    final protected function setPayloadParameter(string $parameter, $value): void
+    private function setPayloadParameter(string $parameter, $value): void
     {
         $this->checkParameterType($value);
 
-        $this->payload[$parameter] = $value;
+        $this->defaultSetPayloadParameter($parameter, $value);
     }
 
     /**
