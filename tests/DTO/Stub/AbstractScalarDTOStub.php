@@ -19,6 +19,8 @@ use Gears\DTO\AbstractScalarDTO;
  * AbstractScalarDTO stub class.
  *
  * @method getParameter(): int
+ * @method getObject(): self
+ * @method getCollection(): \Gears\DTO\AbstractDTOCollection
  */
 class AbstractScalarDTOStub extends AbstractScalarDTO
 {
