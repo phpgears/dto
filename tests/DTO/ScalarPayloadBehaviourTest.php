@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
+use Gears\DTO\Exception\InvalidScalarParameterException;
 use Gears\DTO\Tests\Stub\ScalarPayloadBehaviourStub;
 use PHPUnit\Framework\TestCase;
 
@@ -21,12 +22,13 @@ use PHPUnit\Framework\TestCase;
  */
 class ScalarPayloadBehaviourTest extends TestCase
 {
-    /**
-     * @expectedException \Gears\DTO\Exception\InvalidScalarParameterException
-     * @expectedExceptionMessageRegExp /Class .+ can only accept scalar payload parameters, stdClass given/
-     */
     public function testNotScalar(): void
     {
+        $this->expectException(InvalidScalarParameterException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given$/'
+        );
+
         new ScalarPayloadBehaviourStub(['parameter' => new \stdClass()]);
     }
 

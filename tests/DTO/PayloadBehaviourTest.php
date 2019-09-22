@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
+use Gears\DTO\Exception\InvalidMethodCallException;
+use Gears\DTO\Exception\InvalidParameterException;
 use Gears\DTO\Tests\Stub\PayloadBehaviourStub;
 use PHPUnit\Framework\TestCase;
 
@@ -44,34 +46,31 @@ class PayloadBehaviourTest extends TestCase
         $this->assertSame(['value' => 'myValue'], $stub->getPayload());
     }
 
-    /**
-     * @expectedException \Gears\DTO\Exception\InvalidParameterException
-     * @expectedExceptionMessageRegExp /Payload parameter attribute on.+ does not exist/
-     */
     public function testNonExistentPayload(): void
     {
+        $this->expectException(InvalidParameterException::class);
+        $this->expectExceptionMessageRegExp('/^Payload parameter "attribute" on ".+" does not exist$/');
+
         $stub = new PayloadBehaviourStub([]);
 
         $stub->get('attribute');
     }
 
-    /**
-     * @expectedException \Gears\DTO\Exception\InvalidMethodCallException
-     * @expectedExceptionMessageRegExp /^Method .+::unknownMethod does not exist$/
-     */
     public function testUnknownMethod(): void
     {
+        $this->expectException(InvalidMethodCallException::class);
+        $this->expectExceptionMessageRegExp('/^Method ".+::unknownMethod" does not exist$/');
+
         $stub = new PayloadBehaviourStub([]);
 
         $stub->unknownMethod();
     }
 
-    /**
-     * @expectedException \Gears\DTO\Exception\InvalidMethodCallException
-     * @expectedExceptionMessageRegExp /^.+::getParameter method should be called with no parameters$/
-     */
     public function testInvalidMethodArguments(): void
     {
+        $this->expectException(InvalidMethodCallException::class);
+        $this->expectExceptionMessageRegExp('/^Method ".+::getParameter" should be called with no parameters$/');
+
         $stub = new PayloadBehaviourStub([]);
 
         $stub->getParameter('none');

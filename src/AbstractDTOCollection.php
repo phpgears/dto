@@ -34,7 +34,7 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
      */
     final protected function __construct(array $elements)
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->verifyElementsType($elements);
 
@@ -80,7 +80,7 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
             && (!\class_exists($allowedType) || !\in_array(DTO::class, \class_implements($allowedType), true))
         ) {
             throw new InvalidCollectionTypeException(\sprintf(
-                'Allowed class type for %s should be a %s, %s given',
+                'Allowed class type for "%s" should be a "%s", "%s" given',
                 static::class,
                 DTO::class,
                 $allowedType
@@ -90,7 +90,7 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
         foreach ($elements as $element) {
             if (!\is_object($element) || !\is_a($element, $allowedType)) {
                 throw new InvalidParameterException(\sprintf(
-                    'All elements of %s should be instances of %s, %s given',
+                    'All elements of "%s" should be instances of "%s", "%s" given',
                     static::class,
                     $allowedType,
                     \is_object($element) ? \get_class($element) : \gettype($element)

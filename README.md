@@ -49,7 +49,7 @@ class MyDTO implements DTO, MyDTOInterface
 
     public function __construct(array $parameters)
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->setPayload($parameters);
     }
@@ -78,6 +78,15 @@ use Gears\DTO\AbstractScalarDTO;
  */
 class MyDTO extends AbstractScalarDTO
 {
+    /**
+     * Custom named constructor.
+     *
+     * @param string $name
+     * @param string $lastName
+     * @param DateTimeImmutable $date
+     * 
+     * @return self
+     */
     public static function instantiate(
         string $name,
         string $lastName,

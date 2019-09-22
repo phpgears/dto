@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
+use Gears\DTO\Exception\InvalidScalarParameterException;
 use Gears\DTO\Tests\Stub\AbstractScalarDTOCollectionStub;
 use Gears\DTO\Tests\Stub\AbstractScalarDTOStub;
 use PHPUnit\Framework\TestCase;
@@ -22,12 +23,13 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractScalarDTOTest extends TestCase
 {
-    /**
-     * @expectedException \Gears\DTO\Exception\InvalidScalarParameterException
-     * @expectedExceptionMessageRegExp /Class .+ can only accept scalar payload parameters, stdClass given/
-     */
     public function testNotScalar(): void
     {
+        $this->expectException(InvalidScalarParameterException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given$/'
+        );
+
         AbstractScalarDTOStub::fromArray(['parameter' => new \stdClass()]);
     }
 

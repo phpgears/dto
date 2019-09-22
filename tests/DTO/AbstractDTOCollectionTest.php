@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
+use Gears\DTO\Exception\InvalidCollectionTypeException;
+use Gears\DTO\Exception\InvalidParameterException;
 use Gears\DTO\Tests\Stub\AbstractDTOCollectionInvalidTypeStub;
 use Gears\DTO\Tests\Stub\AbstractDTOCollectionStub;
 use Gears\DTO\Tests\Stub\AbstractDTOStub;
@@ -23,21 +25,21 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractDTOCollectionTest extends TestCase
 {
-    /**
-     * @expectedException \Gears\DTO\Exception\InvalidCollectionTypeException
-     * @expectedExceptionMessageRegExp /^Allowed class type for .+ should be a .+, .+\\InvalidParameterException given$/
-     */
     public function testInvalidType(): void
     {
+        $this->expectException(InvalidCollectionTypeException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Allowed class type for ".+" should be a ".+", ".+\\InvalidParameterException" given$/'
+        );
+
         AbstractDTOCollectionInvalidTypeStub::fromElements([]);
     }
 
-    /**
-     * @expectedException \Gears\DTO\Exception\InvalidParameterException
-     * @expectedExceptionMessageRegExp /^All elements of .+ should be instances of .+, stdClass given$/
-     */
     public function testInvalidElement(): void
     {
+        $this->expectException(InvalidParameterException::class);
+        $this->expectExceptionMessageRegExp('/^All elements of ".+" should be instances of ".+", "stdClass" given$/');
+
         AbstractDTOCollectionStub::fromElements([AbstractDTOStub::fromArray([]), new \stdClass()]);
     }
 

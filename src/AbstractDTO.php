@@ -31,7 +31,7 @@ abstract class AbstractDTO implements DTO
      */
     final protected function __construct(array $parameters)
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->setPayload($parameters);
     }

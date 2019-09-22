@@ -33,7 +33,7 @@ abstract class AbstractScalarDTO implements DTO
      */
     final protected function __construct(array $parameters)
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->setPayload($parameters);
     }
@@ -55,7 +55,7 @@ abstract class AbstractScalarDTO implements DTO
             }
         } elseif ($value !== null && !\is_scalar($value) && !$value instanceof self) {
             throw new InvalidScalarParameterException(\sprintf(
-                'Class %s can only accept scalar payload parameters, %s given',
+                'Class "%s" can only accept scalar payload parameters, "%s" given',
                 self::class,
                 \is_object($value) ? \get_class($value) : \gettype($value)
             ));
