@@ -27,23 +27,23 @@ class PayloadBehaviourTest extends TestCase
     {
         $stub = new PayloadBehaviourStub(['Parameter' => 100, 'argument' => 'value']);
 
-        $this->assertTrue($stub->has('Parameter'));
-        $this->assertSame(100, $stub->get('Parameter'));
-        $this->assertSame(100, $stub->getParameter());
+        static::assertTrue($stub->has('Parameter'));
+        static::assertSame(100, $stub->get('Parameter'));
+        static::assertSame(100, $stub->getParameter());
 
-        $this->assertTrue($stub->has('argument'));
-        $this->assertSame('value', $stub->get('argument'));
-        $this->assertSame('value', $stub->getArgument());
+        static::assertTrue($stub->has('argument'));
+        static::assertSame('value', $stub->get('argument'));
+        static::assertSame('value', $stub->getArgument());
     }
 
     public function testPayloadParsing(): void
     {
         $stub = new PayloadBehaviourStub(['value' => 'myValue']);
 
-        $this->assertTrue($stub->has('value'));
-        $this->assertSame('myvalue', $stub->get('value'));
+        static::assertTrue($stub->has('value'));
+        static::assertSame('myvalue', $stub->get('value'));
 
-        $this->assertSame(['value' => 'myValue'], $stub->getPayload());
+        static::assertSame(['value' => 'myValue'], $stub->getPayload());
     }
 
     public function testNonExistentPayload(): void

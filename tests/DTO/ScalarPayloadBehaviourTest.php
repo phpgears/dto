@@ -39,7 +39,7 @@ class ScalarPayloadBehaviourTest extends TestCase
             'value' => 'myValue',
         ]);
 
-        $this->assertSame([100], $stub->get('parameter'));
-        $this->assertSame(['parameter' => [100], 'value' => 'myValue'], $stub->getPayload());
+        static::assertSame([100], $stub->get('parameter'));
+        static::assertSame(['parameter' => [100], 'value' => 'myValue'], $stub->getPayload());
     }
 }

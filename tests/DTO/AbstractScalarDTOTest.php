@@ -40,8 +40,8 @@ class AbstractScalarDTOTest extends TestCase
             'object' => AbstractScalarDTOStub::fromArray([]),
         ]);
 
-        $this->assertSame(100, $stub->get('parameter'));
-        $this->assertSame(100, $stub->getParameter());
+        static::assertSame(100, $stub->get('parameter'));
+        static::assertSame(100, $stub->getParameter());
     }
 
     public function testAcceptDTO(): void
@@ -50,7 +50,7 @@ class AbstractScalarDTOTest extends TestCase
             'object' => AbstractScalarDTOStub::fromArray([]),
         ]);
 
-        $this->assertInstanceOf(AbstractScalarDTOStub::class, $stub->getObject());
+        static::assertInstanceOf(AbstractScalarDTOStub::class, $stub->getObject());
     }
 
     public function testAcceptDTOCollection(): void
@@ -59,7 +59,7 @@ class AbstractScalarDTOTest extends TestCase
             'collection' => AbstractScalarDTOCollectionStub::fromElements([AbstractScalarDTOStub::fromArray([])]),
         ]);
 
-        $this->assertCount(1, $stub->getCollection());
-        $this->assertInstanceOf(AbstractScalarDTOStub::class, $stub->getCollection()[0]);
+        static::assertCount(1, $stub->getCollection());
+        static::assertInstanceOf(AbstractScalarDTOStub::class, $stub->getCollection()[0]);
     }
 }

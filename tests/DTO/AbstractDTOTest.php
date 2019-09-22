@@ -25,7 +25,7 @@ class AbstractDTOTest extends TestCase
     {
         $stub = AbstractDTOStub::fromArray(['parameter' => 100]);
 
-        $this->assertSame(100, $stub->get('parameter'));
-        $this->assertSame(100, $stub->getParameter());
+        static::assertSame(100, $stub->get('parameter'));
+        static::assertSame(100, $stub->getParameter());
     }
 }
