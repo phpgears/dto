@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\DTO;
 
+use Gears\DTO\Exception\DTOException;
 use Gears\DTO\Exception\InvalidCollectionTypeException;
 use Gears\DTO\Exception\InvalidParameterException;
 use Gears\Immutability\ImmutabilityBehaviour;
@@ -66,16 +67,16 @@ abstract class AbstractDTOCollection implements DTOCollection
     }
 
     /**
-     * @return mixed[]
+     * @return string[]
      */
     final public function __sleep(): array
     {
-        return ['payload'];
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be serialized', static::class));
     }
 
     final public function __wakeup(): void
     {
-        $this->assertImmutable();
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be unserialized', static::class));
     }
 
     /**
@@ -83,7 +84,7 @@ abstract class AbstractDTOCollection implements DTOCollection
      */
     final public function __serialize(): array
     {
-        return ['payload' => $this->payload];
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be serialized', static::class));
     }
 
     /**
@@ -93,9 +94,7 @@ abstract class AbstractDTOCollection implements DTOCollection
      */
     final public function __unserialize(array $data): void
     {
-        $this->assertImmutable();
-
-        $this->setPayload($data['payload']);
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be unserialized', static::class));
     }
 
     /**
@@ -158,6 +157,6 @@ abstract class AbstractDTOCollection implements DTOCollection
      */
     final protected function getAllowedInterfaces(): array
     {
-        return [DTOCollection::class, \Serializable::class];
+        return [DTOCollection::class];
     }
 }

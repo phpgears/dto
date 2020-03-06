@@ -19,7 +19,7 @@ use Gears\Immutability\ImmutabilityBehaviour;
 /**
  * Abstract immutable and only scalar values Data Transfer Object.
  */
-abstract class AbstractScalarDTO implements DTO
+abstract class AbstractScalarDTO implements DTO, \Serializable
 {
     use ImmutabilityBehaviour, ScalarPayloadBehaviour {
         ScalarPayloadBehaviour::__call insteadof ImmutabilityBehaviour;
@@ -36,19 +36,6 @@ abstract class AbstractScalarDTO implements DTO
         $this->assertImmutable();
 
         $this->setPayload($parameters);
-    }
-
-    /**
-     * @return mixed[]
-     */
-    final public function __sleep(): array
-    {
-        return ['payload'];
-    }
-
-    final public function __wakeup(): void
-    {
-        $this->assertImmutable();
     }
 
     /**
@@ -73,20 +60,40 @@ abstract class AbstractScalarDTO implements DTO
 
     /**
      * {@inheritdoc}
+     */
+    final public function serialize(): string
+    {
+        return \serialize($this->payload);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $serialized
+     */
+    final public function unserialize($serialized): void
+    {
+        $this->assertImmutable();
+
+        $this->payload = \unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @param mixed $value
      */
-    final protected function checkParameterType(&$value): void
+    final protected function checkParameterType($value): void
     {
-        if ($value instanceof DTOCollection) {
-            $value = \iterator_to_array($value->getElements());
+        if ($value instanceof DTO) {
+            $value = $value->getPayload();
         }
 
         if (\is_array($value)) {
             foreach ($value as $val) {
                 $this->checkParameterType($val);
             }
-        } elseif ($value !== null && !\is_scalar($value) && !$value instanceof self) {
+        } elseif ($value !== null && !\is_scalar($value)) {
             throw new InvalidScalarParameterException(\sprintf(
                 'Class "%s" can only accept scalar payload parameters, "%s" given',
                 self::class,

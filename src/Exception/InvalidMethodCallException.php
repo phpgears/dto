@@ -16,6 +16,6 @@ namespace Gears\DTO\Exception;
 /**
  * InvalidMethodCallException class.
  */
-class InvalidMethodCallException extends \RuntimeException
+class InvalidMethodCallException extends DTOException
 {
 }

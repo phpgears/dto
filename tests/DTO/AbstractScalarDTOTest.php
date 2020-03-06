@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Gears\DTO\Tests;
 
 use Gears\DTO\Exception\InvalidScalarParameterException;
-use Gears\DTO\Tests\Stub\AbstractScalarDTOCollectionStub;
 use Gears\DTO\Tests\Stub\AbstractScalarDTOStub;
 use PHPUnit\Framework\TestCase;
 
@@ -53,13 +52,15 @@ class AbstractScalarDTOTest extends TestCase
         static::assertInstanceOf(AbstractScalarDTOStub::class, $stub->getObject());
     }
 
-    public function testAcceptDTOCollection(): void
+    public function testSerialization(): void
     {
-        $stub = AbstractScalarDTOStub::fromArray([
-            'collection' => AbstractScalarDTOCollectionStub::fromElements([AbstractScalarDTOStub::fromArray([])]),
-        ]);
+        $stub = AbstractScalarDTOStub::fromArray(['parameter' => 100]);
 
-        static::assertCount(1, $stub->getCollection());
-        static::assertInstanceOf(AbstractScalarDTOStub::class, $stub->getCollection()[0]);
+        $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
+            ? 'O:42:"Gears\DTO\Tests\Stub\AbstractScalarDTOStub":1:{s:7:"payload";a:1:{s:9:"parameter";i:100;}}'
+            : 'C:42:"Gears\DTO\Tests\Stub\AbstractScalarDTOStub":28:{a:1:{s:9:"parameter";i:100;}}';
+
+        static::assertSame($serialized, \serialize($stub));
+        static::assertSame(100, (\unserialize($serialized))->getParameter());
     }
 }

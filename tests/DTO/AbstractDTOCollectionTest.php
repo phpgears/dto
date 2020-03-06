@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
+use Gears\DTO\Exception\DTOException;
 use Gears\DTO\Exception\InvalidCollectionTypeException;
 use Gears\DTO\Exception\InvalidParameterException;
 use Gears\DTO\Tests\Stub\AbstractDTOCollectionInvalidTypeStub;
@@ -56,5 +57,25 @@ class AbstractDTOCollectionTest extends TestCase
         static::assertSame($elements, \iterator_to_array($stub->get('elements')));
         static::assertSame($elements, \iterator_to_array($stub->getElements()));
         static::assertSame($elements, \iterator_to_array($stub->getIterator()));
+    }
+
+    public function testNoSerialization(): void
+    {
+        $this->expectException(DTOException::class);
+        $this->expectExceptionMessage(
+            'DTO collection "Gears\DTO\Tests\Stub\AbstractDTOCollectionStub" cannot be serialized'
+        );
+
+        \serialize(AbstractDTOCollectionStub::fromElements([]));
+    }
+
+    public function testNoDeserialization(): void
+    {
+        $this->expectException(DTOException::class);
+        $this->expectExceptionMessage(
+            'DTO collection "Gears\DTO\Tests\Stub\AbstractDTOCollectionStub" cannot be unserialized'
+        );
+
+        \unserialize('O:46:"Gears\DTO\Tests\Stub\AbstractDTOCollectionStub":0:{}');
     }
 }

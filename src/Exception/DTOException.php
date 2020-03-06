@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Gears\DTO\Exception;
 
 /**
- * InvalidParameterException class.
+ * DTOException class.
  */
-class InvalidParameterException extends DTOException
+class DTOException extends \LogicException
 {
 }

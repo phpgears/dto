@@ -16,6 +16,6 @@ namespace Gears\DTO\Exception;
 /**
  * InvalidCollectionTypeException class.
  */
-class InvalidCollectionTypeException extends \RuntimeException
+class InvalidCollectionTypeException extends DTOException
 {
 }

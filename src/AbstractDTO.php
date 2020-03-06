@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\DTO;
 
+use Gears\DTO\Exception\DTOException;
 use Gears\Immutability\ImmutabilityBehaviour;
 
 /**
@@ -37,16 +38,16 @@ abstract class AbstractDTO implements DTO
     }
 
     /**
-     * @return mixed[]
+     * @return string[]
      */
     final public function __sleep(): array
     {
-        return ['payload'];
+        throw new DTOException(\sprintf('DTO "%s" cannot be serialized', static::class));
     }
 
     final public function __wakeup(): void
     {
-        $this->assertImmutable();
+        throw new DTOException(\sprintf('DTO "%s" cannot be unserialized', static::class));
     }
 
     /**
@@ -54,7 +55,7 @@ abstract class AbstractDTO implements DTO
      */
     final public function __serialize(): array
     {
-        return ['payload' => $this->payload];
+        throw new DTOException(\sprintf('DTO "%s" cannot be serialized', static::class));
     }
 
     /**
@@ -64,9 +65,7 @@ abstract class AbstractDTO implements DTO
      */
     final public function __unserialize(array $data): void
     {
-        $this->assertImmutable();
-
-        $this->setPayload($data['payload']);
+        throw new DTOException(\sprintf('DTO "%s" cannot be unserialized', static::class));
     }
 
     /**
@@ -76,6 +75,6 @@ abstract class AbstractDTO implements DTO
      */
     final protected function getAllowedInterfaces(): array
     {
-        return [DTO::class, \Serializable::class];
+        return [DTO::class];
     }
 }

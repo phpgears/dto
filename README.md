@@ -63,7 +63,7 @@ class MyDTO implements DTO, MyDTOInterface
 
 If you just need a plain DTO object it gets a lot easier, this boilerplate code is already in place for you by extending `Gears\DTO\AbstractDTO` or `Gears\DTO\AbstractScalarDTO` classes
 
-Constructors are declared protected forcing you to create "named constructors", this have a very useful side effect, you get to type-hint all your DTO parameters
+Protected constructors force you to create "named constructors", this has a very useful side effect, you get to type-hint all your DTO parameters
 
 ```php
 use Gears\DTO\AbstractScalarDTO;
@@ -109,11 +109,11 @@ class MyDTO extends AbstractScalarDTO
 }
 ```
 
-The difference between `Gears\DTO\AbstractDTO` and `Gears\DTO\AbstractScalarDTO` is that the later ensures all payload is either a scalar value (null, string, int, float or bool) or an array of scalar values. It's purpose is to ensure the DTO can be securely serialized, it is the perfect match to create Domain Events, or CQRS Command/Query. Other than that both classes are exactly the same
+The difference between `Gears\DTO\AbstractDTO` and `Gears\DTO\AbstractScalarDTO` is that the later ensures all payload is either a scalar value (null, string, int, float or bool) or an array of scalar values. Its purpose is to ensure the object can be securely serialized, it is the perfect match to create Domain Events, or CQRS Commands/Queries
 
-Finally `Gears\DTO\AbstractDTOCollection` is a special type of DTO that only accepts a list of elements, being this elements implementations of DTO interface itself. This object is meant to be used as a return value when several DTOs should be returned, for example from a DDBB request
+Finally `Gears\DTO\AbstractDTOCollection` is a special type of DTO that only accepts a list of elements, being these elements implementations of DTO interface itself. This object is meant to be used as a return value when several DTOs should be returned, for example from a DDBB query result
 
-You can take advantage of magic method __call on DTO objects to access parameters. If you plan to use this feature it's best to annotate this magic accessors at class level with `@method` phpDoc tag, this will help you're IDE auto-completion
+You can take advantage of magic method __call on DTO objects to access parameters. If you plan to use this feature it's best to annotate this magic accessors at class level with `@method` phpDoc tag, this will help your IDE auto-completion
 
 ## Contributing
 
