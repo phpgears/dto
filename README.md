@@ -71,8 +71,8 @@ use Gears\DTO\AbstractScalarDTO;
 /**
  * @method hasName(): bool
  * @method getName(): string
- * @method hasLastname(): bool
- * @method getLastname(): string
+ * @method hasLastName(): bool
+ * @method getLastName(): string
  * @method hasDate(): bool
  * @method getDate(): \DateTimeImmutable
  */

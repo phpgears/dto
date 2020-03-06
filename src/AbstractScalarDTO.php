@@ -39,6 +39,39 @@ abstract class AbstractScalarDTO implements DTO
     }
 
     /**
+     * @return mixed[]
+     */
+    final public function __sleep(): array
+    {
+        return ['payload'];
+    }
+
+    final public function __wakeup(): void
+    {
+        $this->assertImmutable();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    final public function __serialize(): array
+    {
+        return ['payload' => $this->payload];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    final public function __unserialize(array $data): void
+    {
+        $this->assertImmutable();
+
+        $this->setPayload($data['payload']);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @param mixed $value
@@ -69,6 +102,6 @@ abstract class AbstractScalarDTO implements DTO
      */
     final protected function getAllowedInterfaces(): array
     {
-        return [DTO::class];
+        return [DTO::class, \Serializable::class];
     }
 }

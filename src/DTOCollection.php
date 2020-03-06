@@ -15,8 +15,10 @@ namespace Gears\DTO;
 
 /**
  * Data Transfer Object collection interface.
+ *
+ * @extends \IteratorAggregate<DTO>
  */
-interface DTOCollection extends DTO
+interface DTOCollection extends DTO, \IteratorAggregate
 {
     /**
      * Create collection from elements.
@@ -30,14 +32,14 @@ interface DTOCollection extends DTO
     /**
      * Get elements as traversable.
      *
-     * @return \Traversable
+     * @return \Traversable<DTO>
      */
     public function getElements(): \Traversable;
 
     /**
      * Get traversable from collection.
      *
-     * @return \Traversable
+     * @return \Traversable<DTO>
      */
     public function getIterator(): \Traversable;
 }

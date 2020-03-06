@@ -20,7 +20,7 @@ use Gears\Immutability\ImmutabilityBehaviour;
 /**
  * Abstract immutable Data Transfer Object collection.
  */
-abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregate
+abstract class AbstractDTOCollection implements DTOCollection
 {
     use ImmutabilityBehaviour, PayloadBehaviour {
         PayloadBehaviour::__call insteadof ImmutabilityBehaviour;
@@ -66,6 +66,39 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
     }
 
     /**
+     * @return mixed[]
+     */
+    final public function __sleep(): array
+    {
+        return ['payload'];
+    }
+
+    final public function __wakeup(): void
+    {
+        $this->assertImmutable();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    final public function __serialize(): array
+    {
+        return ['payload' => $this->payload];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    final public function __unserialize(array $data): void
+    {
+        $this->assertImmutable();
+
+        $this->setPayload($data['payload']);
+    }
+
+    /**
      * Verify collection elements type.
      *
      * @param mixed[] $elements
@@ -104,7 +137,7 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
      *
      * @param mixed[] $elements
      *
-     * @return \Traversable
+     * @return \Traversable<mixed>
      */
     final protected function outputElements(array $elements): \Traversable
     {
@@ -125,6 +158,6 @@ abstract class AbstractDTOCollection implements DTOCollection, \IteratorAggregat
      */
     final protected function getAllowedInterfaces(): array
     {
-        return [DTOCollection::class, \IteratorAggregate::class];
+        return [DTOCollection::class, \Serializable::class];
     }
 }

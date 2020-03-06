@@ -28,4 +28,13 @@ class AbstractDTOTest extends TestCase
         static::assertSame(100, $stub->get('parameter'));
         static::assertSame(100, $stub->getParameter());
     }
+
+    public function testAcceptDTO(): void
+    {
+        $stub = AbstractDTOStub::fromArray([
+            'object' => AbstractDTOStub::fromArray([]),
+        ]);
+
+        static::assertInstanceOf(AbstractDTOStub::class, $stub->getObject());
+    }
 }
