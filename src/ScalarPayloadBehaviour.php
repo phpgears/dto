@@ -25,16 +25,17 @@ trait ScalarPayloadBehaviour
     }
 
     /**
-     * Set payload parameter.
+     * {@inheritdoc}
      *
-     * @param string $parameter
-     * @param mixed  $value
+     * @param \ReflectionClass $reflection
+     * @param string           $parameter
+     * @param mixed            $value
      */
-    private function setPayloadParameter(string $parameter, $value): void
+    private function setPayloadParameter(\ReflectionClass $reflection, string $parameter, $value): void
     {
         $this->checkParameterType($value);
 
-        $this->defaultSetPayloadParameter($parameter, $value);
+        $this->defaultSetPayloadParameter($reflection, $parameter, $value);
     }
 
     /**
@@ -46,6 +47,10 @@ trait ScalarPayloadBehaviour
      */
     final protected function checkParameterType($value): void
     {
+        if ($value instanceof DTO) {
+            $value = $value->getPayload();
+        }
+
         if (\is_array($value)) {
             foreach ($value as $val) {
                 $this->checkParameterType($val);

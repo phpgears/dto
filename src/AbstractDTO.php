@@ -14,16 +14,13 @@ declare(strict_types=1);
 namespace Gears\DTO;
 
 use Gears\DTO\Exception\DTOException;
-use Gears\Immutability\ImmutabilityBehaviour;
 
 /**
  * Abstract immutable Data Transfer Object.
  */
 abstract class AbstractDTO implements DTO
 {
-    use ImmutabilityBehaviour, PayloadBehaviour {
-        PayloadBehaviour::__call insteadof ImmutabilityBehaviour;
-    }
+    use PayloadBehaviour;
 
     /**
      * AbstractDTO constructor.
@@ -32,9 +29,17 @@ abstract class AbstractDTO implements DTO
      */
     final protected function __construct(array $parameters)
     {
-        $this->assertImmutable();
-
         $this->setPayload($parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string[]
+     */
+    final protected function getAllowedInterfaces(): array
+    {
+        return [DTO::class];
     }
 
     /**
@@ -66,15 +71,5 @@ abstract class AbstractDTO implements DTO
     final public function __unserialize(array $data): void
     {
         throw new DTOException(\sprintf('DTO "%s" cannot be unserialized', static::class));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string[]
-     */
-    final protected function getAllowedInterfaces(): array
-    {
-        return [DTO::class];
     }
 }

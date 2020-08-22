@@ -16,22 +16,24 @@ namespace Gears\DTO\Tests\Stub;
 use Gears\DTO\AbstractDTO;
 
 /**
- * AbstractDTOS stub class.
+ * AbstractDTO trait stub class.
  *
- * @method getParameter(): int
- * @method getObject(): self
+ * @method getParameter()
  */
 class AbstractDTOStub extends AbstractDTO
 {
     /**
-     * Get from array.
-     *
-     * @param array<string, mixed> $parameters
-     *
-     * @return self
+     * @var int|null
      */
-    public static function fromArray(array $parameters): self
+    protected $parameter;
+
+    /**
+     * @param mixed[] $parameters
+     *
+     * @return static
+     */
+    public static function fromArray(array $parameters)
     {
-        return new self($parameters);
+        return new static($parameters);
     }
 }

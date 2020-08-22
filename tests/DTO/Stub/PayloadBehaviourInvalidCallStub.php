@@ -14,34 +14,30 @@ declare(strict_types=1);
 namespace Gears\DTO\Tests\Stub;
 
 use Gears\DTO\DTO;
-use Gears\DTO\ScalarPayloadBehaviour;
+use Gears\DTO\PayloadBehaviour;
 
 /**
- * ScalarPayloadBehaviour trait stub class.
+ * PayloadBehaviour trait stub class.
  *
  * @method getParameter()
- * @method getValue()
  */
-class ScalarPayloadBehaviourStub implements DTO
+class PayloadBehaviourInvalidCallStub implements DTO
 {
-    use ScalarPayloadBehaviour;
-
-    protected $parameter;
-
-    protected $value;
+    use PayloadBehaviour;
 
     /**
-     * ScalarPayloadBehaviour constructor.
+     * PayloadTraitStub constructor.
      *
      * @param array<string, mixed> $parameters
      */
     public function __construct(array $parameters)
     {
+        $this->assertImmutable();
         $this->setPayload($parameters);
     }
 
     protected function getAllowedInterfaces(): array
     {
-        return [DTO::class, \Serializable::class];
+        return [DTO::class];
     }
 }

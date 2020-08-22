@@ -32,7 +32,17 @@ class ScalarPayloadBehaviourTest extends TestCase
         new ScalarPayloadBehaviourStub(['parameter' => new \stdClass()]);
     }
 
-    public function testDirectPayload(): void
+    public function testNotScalarArray(): void
+    {
+        $this->expectException(InvalidScalarParameterException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given$/'
+        );
+
+        new ScalarPayloadBehaviourStub(['parameter' => [new \stdClass()]]);
+    }
+
+    public function testPayload(): void
     {
         $stub = new ScalarPayloadBehaviourStub([
             'parameter' => [100],
@@ -40,6 +50,18 @@ class ScalarPayloadBehaviourTest extends TestCase
         ]);
 
         static::assertSame([100], $stub->get('parameter'));
+        static::assertSame([100], $stub->getParameter());
         static::assertSame(['parameter' => [100], 'value' => 'myValue'], $stub->getPayload());
+    }
+
+    public function testAcceptDTO(): void
+    {
+        $parameter = new ScalarPayloadBehaviourStub([]);
+        $stub = new ScalarPayloadBehaviourStub([
+            'parameter' => $parameter,
+        ]);
+
+        static::assertSame($parameter, $stub->getParameter());
+        static::assertEquals(['parameter' => $parameter, 'value' => null], $stub->getPayload());
     }
 }

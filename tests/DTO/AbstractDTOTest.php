@@ -22,21 +22,13 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractDTOTest extends TestCase
 {
-    public function testCreation(): void
+    public function testPayload(): void
     {
         $stub = AbstractDTOStub::fromArray(['parameter' => 100]);
 
         static::assertSame(100, $stub->get('parameter'));
         static::assertSame(100, $stub->getParameter());
-    }
-
-    public function testAcceptDTO(): void
-    {
-        $stub = AbstractDTOStub::fromArray([
-            'object' => AbstractDTOStub::fromArray([]),
-        ]);
-
-        static::assertInstanceOf(AbstractDTOStub::class, $stub->getObject());
+        static::assertEquals(['parameter' => 100], $stub->getPayload());
     }
 
     public function testNoSerialization(): void

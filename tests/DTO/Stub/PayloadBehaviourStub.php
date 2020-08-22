@@ -13,19 +13,21 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests\Stub;
 
+use Gears\DTO\DTO;
 use Gears\DTO\PayloadBehaviour;
 
 /**
  * PayloadBehaviour trait stub class.
  *
- * @method hasParameter(): bool
- * @method hasArgument(): bool
- * @method getParameter(): int
- * @method getArgument(): string
+ * @method getParameter()
  */
-class PayloadBehaviourStub
+class PayloadBehaviourStub implements DTO
 {
     use PayloadBehaviour;
+
+    protected $parameter;
+
+    protected $value;
 
     /**
      * PayloadTraitStub constructor.
@@ -37,13 +39,38 @@ class PayloadBehaviourStub
         $this->setPayload($parameters);
     }
 
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    public function outputValue(string $value): string
+    protected function testImmutable(): void
     {
-        return \strtolower($value);
+        $this->assertImmutable();
+    }
+
+    public static function callImmutableAssertion(): void
+    {
+        $dto = new static([]);
+        $dto->testImmutable();
+    }
+
+    protected function testPayload(): void
+    {
+        $this->setPayload([]);
+    }
+
+    public static function callPayload(): void
+    {
+        $dto = new static([]);
+        $dto->testPayload();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getValue(): ?string
+    {
+        return $this->value ? \strtolower($this->value) : null;
+    }
+
+    protected function getAllowedInterfaces(): array
+    {
+        return [DTO::class];
     }
 }

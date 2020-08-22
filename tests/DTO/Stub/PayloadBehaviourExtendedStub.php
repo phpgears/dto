@@ -13,18 +13,12 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests\Stub;
 
-use Gears\DTO\AbstractDTOCollection;
-
 /**
- * AbstractScalarDTOCollection stub class.
+ * PayloadBehaviourExtended trait stub class.
+ *
+ * @method getExtended()
  */
-class AbstractScalarDTOCollectionStub extends AbstractDTOCollection
+class PayloadBehaviourExtendedStub extends PayloadBehaviourStub
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function getAllowedType(): string
-    {
-        return AbstractScalarDTOStub::class;
-    }
+    private $extended;
 }

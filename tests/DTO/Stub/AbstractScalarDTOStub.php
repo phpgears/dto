@@ -16,23 +16,21 @@ namespace Gears\DTO\Tests\Stub;
 use Gears\DTO\AbstractScalarDTO;
 
 /**
- * AbstractScalarDTO stub class.
+ * AbstractScalarDTO trait stub class.
  *
- * @method getParameter(): int
- * @method getObject(): self
- * @method getCollection(): \Gears\DTO\AbstractDTOCollection
+ * @method getParameter()
  */
 class AbstractScalarDTOStub extends AbstractScalarDTO
 {
+    protected $parameter;
+
     /**
-     * Get from array.
+     * @param mixed[] $parameters
      *
-     * @param array<string, mixed> $parameters
-     *
-     * @return self
+     * @return static
      */
-    public static function fromArray(array $parameters): self
+    public static function fromArray(array $parameters)
     {
-        return new self($parameters);
+        return new static($parameters);
     }
 }

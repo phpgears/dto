@@ -19,15 +19,6 @@ namespace Gears\DTO;
 interface DTO
 {
     /**
-     * Check parameter existence.
-     *
-     * @param string $parameter
-     *
-     * @return bool
-     */
-    public function has(string $parameter): bool;
-
-    /**
      * Get parameter.
      *
      * @param string $parameter

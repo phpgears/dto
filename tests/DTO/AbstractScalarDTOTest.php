@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
-use Gears\DTO\Exception\InvalidScalarParameterException;
 use Gears\DTO\Tests\Stub\AbstractScalarDTOStub;
 use PHPUnit\Framework\TestCase;
 
@@ -22,36 +21,6 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractScalarDTOTest extends TestCase
 {
-    public function testNotScalar(): void
-    {
-        $this->expectException(InvalidScalarParameterException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given$/'
-        );
-
-        AbstractScalarDTOStub::fromArray(['parameter' => new \stdClass()]);
-    }
-
-    public function testCreation(): void
-    {
-        $stub = AbstractScalarDTOStub::fromArray([
-            'parameter' => 100,
-            'object' => AbstractScalarDTOStub::fromArray([]),
-        ]);
-
-        static::assertSame(100, $stub->get('parameter'));
-        static::assertSame(100, $stub->getParameter());
-    }
-
-    public function testAcceptDTO(): void
-    {
-        $stub = AbstractScalarDTOStub::fromArray([
-            'object' => AbstractScalarDTOStub::fromArray([]),
-        ]);
-
-        static::assertInstanceOf(AbstractScalarDTOStub::class, $stub->getObject());
-    }
-
     public function testSerialization(): void
     {
         $stub = AbstractScalarDTOStub::fromArray(['parameter' => 100]);

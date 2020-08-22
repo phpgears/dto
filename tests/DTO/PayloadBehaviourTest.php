@@ -13,9 +13,13 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
+use Gears\DTO\Exception\DTOViolationException;
 use Gears\DTO\Exception\InvalidMethodCallException;
 use Gears\DTO\Exception\InvalidParameterException;
+use Gears\DTO\Tests\Stub\PayloadBehaviourExtendedStub;
+use Gears\DTO\Tests\Stub\PayloadBehaviourInvalidCallStub;
 use Gears\DTO\Tests\Stub\PayloadBehaviourStub;
+use Gears\Immutability\Exception\ImmutabilityViolationException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,27 +27,72 @@ use PHPUnit\Framework\TestCase;
  */
 class PayloadBehaviourTest extends TestCase
 {
-    public function testDirectPayload(): void
+    public function testNoImmutabilityAssertion(): void
     {
-        $stub = new PayloadBehaviourStub(['Parameter' => 100, 'argument' => 'value']);
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Immutability check available only through "setPayload" method, called from ".+::__construct"$/'
+        );
 
-        static::assertTrue($stub->has('Parameter'));
-        static::assertSame(100, $stub->get('Parameter'));
-        static::assertSame(100, $stub->getParameter());
-
-        static::assertTrue($stub->has('argument'));
-        static::assertSame('value', $stub->get('argument'));
-        static::assertSame('value', $stub->getArgument());
+        new PayloadBehaviourInvalidCallStub([]);
     }
 
-    public function testPayloadParsing(): void
+    public function testNoImmutabilityChecked(): void
     {
-        $stub = new PayloadBehaviourStub(['value' => 'myValue']);
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessage(
+            'Class "Gears\DTO\Tests\Stub\PayloadBehaviourStub" was already checked for immutability'
+        );
 
-        static::assertTrue($stub->has('value'));
+        PayloadBehaviourStub::callImmutableAssertion();
+    }
+
+    public function testNoPayloadAssertion(): void
+    {
+        $this->expectException(DTOViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^DTO payload set available only through ".+" methods, called from ".+::testPayload"$/'
+        );
+
+        PayloadBehaviourStub::callPayload();
+    }
+
+    public function testPayload(): void
+    {
+        $stub = new PayloadBehaviourStub(['parameter' => 100, 'value' => 'myValue']);
+
+        static::assertSame(100, $stub->get('parameter'));
+        static::assertSame(100, $stub->getParameter());
         static::assertSame('myvalue', $stub->get('value'));
+        static::assertSame('myvalue', $stub->getValue());
+        static::assertEquals(['parameter' => 100, 'value' => 'myvalue'], $stub->getPayload());
 
-        static::assertSame(['value' => 'myValue'], $stub->getPayload());
+        $stubExtended = new PayloadBehaviourExtendedStub(['parameter' => 100, 'extended' => true]);
+
+        static::assertSame(100, $stubExtended->get('parameter'));
+        static::assertSame(100, $stubExtended->getParameter());
+        static::assertTrue($stubExtended->get('extended'));
+        static::assertTrue($stubExtended->getExtended());
+        static::assertEquals(['parameter' => 100, 'value' => null, 'extended' => true], $stubExtended->getPayload());
+    }
+
+    public function testAcceptDTO(): void
+    {
+        $parameter = new PayloadBehaviourStub([]);
+        $stub = new PayloadBehaviourStub([
+            'parameter' => $parameter,
+        ]);
+
+        static::assertSame($parameter, $stub->getParameter());
+        static::assertEquals(['parameter' => $parameter, 'value' => null], $stub->getPayload());
+    }
+
+    public function testInvalidPayload(): void
+    {
+        $this->expectException(InvalidParameterException::class);
+        $this->expectExceptionMessageRegExp('/^Payload parameter "attribute" on ".+" does not exist$/');
+
+        new PayloadBehaviourStub(['attribute' => 'unknown']);
     }
 
     public function testNonExistentPayload(): void

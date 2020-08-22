@@ -13,18 +13,26 @@ declare(strict_types=1);
 
 namespace Gears\DTO;
 
+use Gears\DTO\Exception\DTOViolationException;
 use Gears\DTO\Exception\InvalidMethodCallException;
 use Gears\DTO\Exception\InvalidParameterException;
+use Gears\Immutability\Exception\ImmutabilityViolationException;
+use Gears\Immutability\ImmutabilityBehaviour;
 
 /**
  * Payload behaviour.
  */
 trait PayloadBehaviour
 {
+    use ImmutabilityBehaviour {
+        __call as private immutabilityCall;
+        getAllowedPublicMethods as private immutabilityGetAllowedPublicMethods;
+    }
+
     /**
-     * @var mixed[]
+     * @var string[]
      */
-    private $payload = [];
+    private $payloadDefinition;
 
     /**
      * Set payload.
@@ -33,34 +41,143 @@ trait PayloadBehaviour
      */
     private function setPayload(array $parameters): void
     {
-        $this->payload = [];
+        $this->assertPayloadCallConstraints();
+
+        $reflection = new \ReflectionClass($this);
+
+        $this->payloadDefinition = $this->getPayloadDefinition($reflection);
+
+        $this->assertImmutable();
 
         foreach ($parameters as $parameter => $value) {
-            $this->setPayloadParameter($parameter, $value);
+            if (!\in_array($parameter, $this->payloadDefinition, true)) {
+                throw new InvalidParameterException(\sprintf(
+                    'Payload parameter "%s" on "%s" does not exist',
+                    $parameter,
+                    static::class
+                ));
+            }
+
+            $this->setPayloadParameter($reflection, $parameter, $value);
         }
     }
 
     /**
      * Set payload attribute.
      *
-     * @param string $parameter
-     * @param mixed  $value
+     * @param \ReflectionClass $reflection
+     * @param string           $parameter
+     * @param mixed            $value
      */
-    private function setPayloadParameter(string $parameter, $value): void
+    private function setPayloadParameter(\ReflectionClass $reflection, string $parameter, $value): void
     {
-        $this->payload[$parameter] = $value;
+        $property = $reflection->getProperty($parameter);
+        $property->setAccessible(true);
+        $property->setValue($this, $value);
     }
 
     /**
-     * Check parameter existence.
+     * Get payload definition.
      *
-     * @param string $parameter
+     * @param \ReflectionClass $reflection
      *
-     * @return bool
+     * @return string[]
      */
-    final public function has(string $parameter): bool
+    private function getPayloadDefinition(\ReflectionClass $reflection): array
     {
-        return \array_key_exists($parameter, $this->payload);
+        $excludedProperties = \array_filter(\array_map(
+            static function (\ReflectionProperty $property): ?string {
+                return !$property->isStatic() ? $property->getName() : null;
+            },
+            (new \ReflectionClass(PayloadBehaviour::class))->getProperties()
+        ));
+
+        return \array_filter(\array_map(
+            static function (\ReflectionProperty $property) use ($excludedProperties): ?string {
+                return !$property->isStatic() && !\in_array($property->getName(), $excludedProperties, true)
+                    ? $property->getName()
+                    : null;
+            },
+            $reflection->getProperties()
+        ));
+    }
+
+    /**
+     * Assert payload set call constraints.
+     *
+     * @throws DTOViolationException
+     */
+    private function assertPayloadCallConstraints(): void
+    {
+        $stack = $this->getFilteredPayloadCallStack();
+
+        $callingMethods = ['__construct', '__wakeup', '__unserialize'];
+        if ($this instanceof \Serializable) {
+            $callingMethods[] = 'unserialize';
+        }
+
+        if (!isset($stack[1]) || !\in_array($stack[1]['function'], $callingMethods, true)) {
+            throw new DTOViolationException(\sprintf(
+                'DTO payload set available only through "%s" methods, called from "%s"',
+                \implode('", "', $callingMethods),
+                isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
+            ));
+        }
+    }
+
+    /**
+     * Get filter call stack.
+     *
+     * @return mixed[]
+     */
+    private function getFilteredPayloadCallStack(): array
+    {
+        $stack = \debug_backtrace();
+
+        while (\count($stack) > 0 && $stack[0]['function'] !== 'setPayload') {
+            \array_shift($stack);
+        }
+
+        return $stack;
+    }
+
+    /**
+     * {@inheritdoc}
+     * Replace original to only accept call from setPayload().
+     */
+    private function assertImmutabilityCallConstraints(): void
+    {
+        $stack = $this->getFilteredImmutabilityCallStack();
+
+        if (!isset($stack[1]) || $stack[1]['function'] !== 'setPayload') {
+            throw new ImmutabilityViolationException(\sprintf(
+                'Immutability check available only through "setPayload" method, called from "%s"',
+                isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
+            ));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     * Extend original to allow payload getters.
+     *
+     * @return string[]
+     */
+    private function getAllowedPublicMethods(): array
+    {
+        $allowedPublicMethods = \array_unique(\array_merge(
+            $this->immutabilityGetAllowedPublicMethods(),
+            \array_map(
+                static function (string $parameter): string {
+                    return 'get' . \ucfirst($parameter);
+                },
+                $this->payloadDefinition
+            )
+        ));
+
+        \sort($allowedPublicMethods);
+
+        return $allowedPublicMethods;
     }
 
     /**
@@ -74,7 +191,7 @@ trait PayloadBehaviour
      */
     final public function get(string $parameter)
     {
-        if (!\array_key_exists($parameter, $this->payload)) {
+        if (!\in_array($parameter, $this->payloadDefinition, true)) {
             throw new InvalidParameterException(\sprintf(
                 'Payload parameter "%s" on "%s" does not exist',
                 $parameter,
@@ -82,14 +199,15 @@ trait PayloadBehaviour
             ));
         }
 
-        $value = $this->payload[$parameter];
-
-        $transformer = $this->getParameterTransformerMethod($parameter);
-        if (\method_exists($this, $transformer)) {
-            $value = $this->$transformer($value);
+        $method = 'get' . \ucfirst($parameter);
+        if (\method_exists($this, $method)) {
+            return $this->$method();
         }
 
-        return $value;
+        $property = (new \ReflectionClass($this))->getProperty($parameter);
+        $property->setAccessible(true);
+
+        return $property->getValue($this);
     }
 
     /**
@@ -99,19 +217,22 @@ trait PayloadBehaviour
      */
     final public function getPayload(): array
     {
-        return $this->payload;
-    }
+        $reflection = new \ReflectionClass($this);
 
-    /**
-     * Get parameter transformer getter method name.
-     *
-     * @param string $parameter
-     *
-     * @return string
-     */
-    protected function getParameterTransformerMethod(string $parameter): string
-    {
-        return 'output' . \ucfirst($parameter);
+        $payload = [];
+        foreach ($this->payloadDefinition as $parameter) {
+            $method = 'get' . \ucfirst($parameter);
+            if (\method_exists($this, $method)) {
+                $payload[$parameter] = $this->$method();
+            } else {
+                $property = $reflection->getProperty($parameter);
+                $property->setAccessible(true);
+
+                $payload[$parameter] = $property->getValue($this);
+            }
+        }
+
+        return $payload;
     }
 
     /**
@@ -127,7 +248,7 @@ trait PayloadBehaviour
      */
     final public function __call(string $methodName, array $arguments)
     {
-        if (\preg_match('/^(has|get)([A-Z][a-zA-Z0-9-_]*)$/', $methodName, $matches) !== 1) {
+        if (\preg_match('/^get(?P<parameter>[A-Z][a-zA-Z0-9-_]*)$/', $methodName, $matches) !== 1) {
             throw new InvalidMethodCallException(
                 \sprintf('Method "%s::%s" does not exist', static::class, $methodName)
             );
@@ -141,12 +262,10 @@ trait PayloadBehaviour
             ));
         }
 
-        [$method, $parameter] = \array_slice($matches, 1);
+        $parameter = $matches['parameter'];
 
-        if ($this->has($parameter)) {
-            return $method === 'has' ? true : $this->get($parameter);
-        }
-
-        return $method === 'has' ? $this->has(\lcfirst($parameter)) : $this->get(\lcfirst($parameter));
+        return \in_array(\lcfirst($parameter), $this->payloadDefinition, true)
+            ? $this->get(\lcfirst($parameter))
+            : $this->get($parameter);
     }
 }
