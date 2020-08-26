@@ -30,9 +30,9 @@ trait PayloadBehaviour
     }
 
     /**
-     * @var string[]
+     * @var array<string[]>
      */
-    private $payloadDefinition;
+    protected static $payloadDefinitionMap = [];
 
     /**
      * Set payload.
@@ -45,12 +45,15 @@ trait PayloadBehaviour
 
         $reflection = new \ReflectionClass($this);
 
-        $this->payloadDefinition = $this->getPayloadDefinition($reflection);
+        $class = static::class;
+        if (!isset(static::$payloadDefinitionMap[$class])) {
+            static::$payloadDefinitionMap[$class] = $this->getPayloadDefinition($reflection);
+        }
 
         $this->assertImmutable();
 
         foreach ($parameters as $parameter => $value) {
-            if (!\in_array($parameter, $this->payloadDefinition, true)) {
+            if (!\in_array($parameter, static::$payloadDefinitionMap[$class], true)) {
                 throw new InvalidParameterException(\sprintf(
                     'Payload parameter "%s" on "%s" does not exist',
                     $parameter,
@@ -171,7 +174,7 @@ trait PayloadBehaviour
                 static function (string $parameter): string {
                     return 'get' . \ucfirst($parameter);
                 },
-                $this->payloadDefinition
+                static::$payloadDefinitionMap[static::class]
             )
         ));
 
@@ -191,7 +194,7 @@ trait PayloadBehaviour
      */
     final public function get(string $parameter)
     {
-        if (!\in_array($parameter, $this->payloadDefinition, true)) {
+        if (!\in_array($parameter, static::$payloadDefinitionMap[static::class], true)) {
             throw new InvalidParameterException(\sprintf(
                 'Payload parameter "%s" on "%s" does not exist',
                 $parameter,
@@ -220,7 +223,7 @@ trait PayloadBehaviour
         $reflection = new \ReflectionClass($this);
 
         $payload = [];
-        foreach ($this->payloadDefinition as $parameter) {
+        foreach (static::$payloadDefinitionMap[static::class] as $parameter) {
             $method = 'get' . \ucfirst($parameter);
             if (\method_exists($this, $method)) {
                 $payload[$parameter] = $this->$method();
@@ -264,7 +267,7 @@ trait PayloadBehaviour
 
         $parameter = $matches['parameter'];
 
-        return \in_array(\lcfirst($parameter), $this->payloadDefinition, true)
+        return \in_array(\lcfirst($parameter), static::$payloadDefinitionMap[static::class], true)
             ? $this->get(\lcfirst($parameter))
             : $this->get($parameter);
     }
