@@ -46,7 +46,7 @@ trait PayloadBehaviour
      *
      * @param array<string, mixed> $payload
      */
-    private function setPayload(array $payload): void
+    final protected function setPayload(array $payload): void
     {
         $this->assertPayloadSingleCall();
 
@@ -115,7 +115,7 @@ trait PayloadBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    final private function assertPayloadSingleCall(): void
+    private function assertPayloadSingleCall(): void
     {
         if ($this->payloadAlreadySet) {
             throw new DTOViolationException(\sprintf('Payload already set for DTO "%s"', static::class));

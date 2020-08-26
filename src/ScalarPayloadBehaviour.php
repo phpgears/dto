@@ -45,12 +45,8 @@ trait ScalarPayloadBehaviour
      *
      * @throws InvalidScalarParameterException
      */
-    final protected function assertPayloadParameterType($value): void
+    private function assertPayloadParameterType($value): void
     {
-        if ($value instanceof DTO) {
-            $value = $value->getPayload();
-        }
-
         if (\is_array($value)) {
             foreach ($value as $val) {
                 $this->assertPayloadParameterType($val);
@@ -62,5 +58,25 @@ trait ScalarPayloadBehaviour
                 \is_object($value) ? \get_class($value) : \gettype($value)
             ));
         }
+    }
+
+    /**
+     * Get payload to be serialized.
+     *
+     * @return mixed[]
+     */
+    private function getPayloadToSerialize(): array
+    {
+        $reflection = new \ReflectionClass($this);
+
+        $payload = [];
+        foreach (static::$payloadDefinitionMap[static::class] as $parameter) {
+            $property = $reflection->getProperty($parameter);
+            $property->setAccessible(true);
+
+            $payload[$parameter] = $property->getValue($this);
+        }
+
+        return $payload;
     }
 }

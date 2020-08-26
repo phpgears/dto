@@ -53,15 +53,4 @@ class ScalarPayloadBehaviourTest extends TestCase
         static::assertSame([100], $stub->getParameter());
         static::assertSame(['parameter' => [100], 'value' => 'myValue'], $stub->getPayload());
     }
-
-    public function testAcceptDTO(): void
-    {
-        $parameter = new ScalarPayloadBehaviourStub([]);
-        $stub = new ScalarPayloadBehaviourStub([
-            'parameter' => $parameter,
-        ]);
-
-        static::assertSame($parameter, $stub->getParameter());
-        static::assertEquals(['parameter' => $parameter, 'value' => null], $stub->getPayload());
-    }
 }

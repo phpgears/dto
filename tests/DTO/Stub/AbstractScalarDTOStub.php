@@ -17,8 +17,6 @@ use Gears\DTO\AbstractScalarDTO;
 
 /**
  * AbstractScalarDTO trait stub class.
- *
- * @method getParameter()
  */
 class AbstractScalarDTOStub extends AbstractScalarDTO
 {
@@ -32,5 +30,13 @@ class AbstractScalarDTOStub extends AbstractScalarDTO
     public static function fromArray(iterable $payload)
     {
         return new static($payload);
+    }
+
+    /**
+     * @return int
+     */
+    public function getParameter(): int
+    {
+        return $this->parameter * 10;
     }
 }

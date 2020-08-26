@@ -87,17 +87,6 @@ class PayloadBehaviourTest extends TestCase
         static::assertEquals(['parameter' => 100, 'value' => null, 'extended' => true], $stubExtended->getPayload());
     }
 
-    public function testAcceptDTO(): void
-    {
-        $parameter = new PayloadBehaviourStub([]);
-        $stub = new PayloadBehaviourStub([
-            'parameter' => $parameter,
-        ]);
-
-        static::assertSame($parameter, $stub->getParameter());
-        static::assertEquals(['parameter' => $parameter, 'value' => null], $stub->getPayload());
-    }
-
     public function testInvalidPayload(): void
     {
         $this->expectException(InvalidParameterException::class);

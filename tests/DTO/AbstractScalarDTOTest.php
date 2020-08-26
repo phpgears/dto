@@ -30,6 +30,6 @@ class AbstractScalarDTOTest extends TestCase
             : 'C:42:"Gears\DTO\Tests\Stub\AbstractScalarDTOStub":28:{a:1:{s:9:"parameter";i:100;}}';
 
         static::assertSame($serialized, \serialize($stub));
-        static::assertSame(100, (\unserialize($serialized))->getParameter());
+        static::assertSame(1000, (\unserialize($serialized))->getParameter());
     }
 }
