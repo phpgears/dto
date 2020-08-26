@@ -33,11 +33,11 @@ class ScalarPayloadBehaviourStub implements DTO
     /**
      * ScalarPayloadBehaviour constructor.
      *
-     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $payload
      */
-    public function __construct(array $parameters)
+    public function __construct(array $payload)
     {
-        $this->setPayload($parameters);
+        $this->setPayload($payload);
     }
 
     protected function getAllowedInterfaces(): array

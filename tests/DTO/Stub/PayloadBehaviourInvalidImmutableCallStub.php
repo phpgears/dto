@@ -28,12 +28,12 @@ class PayloadBehaviourInvalidImmutableCallStub implements DTO
     /**
      * PayloadTraitStub constructor.
      *
-     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $payload
      */
-    public function __construct(array $parameters)
+    public function __construct(array $payload)
     {
         $this->assertImmutable();
-        $this->setPayload($parameters);
+        $this->setPayload($payload);
     }
 
     protected function getAllowedInterfaces(): array

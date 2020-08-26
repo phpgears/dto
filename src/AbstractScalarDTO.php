@@ -23,11 +23,11 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
     /**
      * AbstractSerializableDTO constructor.
      *
-     * @param array<string, mixed> $parameters
+     * @param iterable<mixed> $payload
      */
-    final protected function __construct(array $parameters)
+    final protected function __construct(iterable $payload)
     {
-        $this->setPayload($parameters);
+        $this->setPayload(\is_array($payload) ? $payload : \iterator_to_array($payload));
     }
 
     /**

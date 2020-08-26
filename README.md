@@ -16,7 +16,7 @@ General purpose immutable Data Transfer Objects for PHP
 
 This library provides a means to implement DTO classes as long as three different implementations of general purpose abstract DTO objects you can extend from
 
-This DTO objects are immutable as can be thanks to [gears/immutability](https://github.com/phpgears/immutability) that means once the DTO is created there is no way a value on it is mutated (inside PHP boundaries)
+This DTO objects are immutable as can be thanks to [gears/immutability](https://github.com/phpgears/immutability), that means once the DTO is created there is no way a value can be mutated (inside PHP limitations)
 
 ## Installation
 
@@ -34,33 +34,11 @@ Require composer autoload file
 require './vendor/autoload.php';
 ```
 
-You can use PayloadBehaviour in any object you want to have immutable DTO functionality
+Quickly create plain immutable Data Transfer Objects by extending `Gears\DTO\AbstractDTO`, `Gears\DTO\AbstractScalarDTO` or `Gears\DTO\AbstractDTOCollection`
 
-```php
-use Gears\DTO\DTO;
-use Gears\DTO\PayloadBehaviour;
+All the abstract classes have protected constructors that forces you to create "named constructors" in which you get to type-hint all your DTO attributes
 
-class MyDTO implements DTO, MyDTOInterface
-{
-    use PayloadBehaviour;
-
-    private $parameter;
-
-    public function __construct(array $parameters)
-    {
-        $this->setPayload($parameters);
-    }
-
-    final public function getAllowedInterfaces(): array
-    {
-        return [DTO::class, MyDTOInterface::class];
-    }
-}
-```
-
-If you just need a plain DTO object it gets a lot easier, this boilerplate code is already in place for you by extending `Gears\DTO\AbstractDTO` or `Gears\DTO\AbstractScalarDTO` classes
-
-Protected constructor forces you to create "named constructors", this has a very useful side effect, you get to type-hint all your DTO parameters
+The difference between `Gears\DTO\AbstractDTO` and `Gears\DTO\AbstractScalarDTO` is that the later verifies that all attributes are either a scalar value (null, string, int, float or bool) or an array of scalar values. Its purpose is to ensure the object can be securely serialized/unserialized, and is perfect to create Domain Events, or Commands/Queries for CQRS
 
 ```php
 use Gears\DTO\AbstractScalarDTO;
@@ -69,7 +47,7 @@ use Gears\DTO\AbstractScalarDTO;
  * @method getName(): string
  * @method getAge(): int
  */
-class MyDTO extends AbstractScalarDTO
+final class MyDTO extends AbstractScalarDTO
 {
     /** 
      * @var string 
@@ -120,21 +98,45 @@ class MyDTO extends AbstractScalarDTO
 
 $myDto = MyDTO::instantiate('name', 24, new \DateTimeImmutable('now'));
 
-$name = $myDto->get('name');
-$name = $myDto->getName();
-$age = $myDto->get('age');
-$age = $myDto->getAge();
-$date = $myDto->get('date');
-$date = $myDto->getDate();
+$name = $myDto->get('name'); // Same as $myDto->getName();
+$age = $myDto->get('age'); // Same as $myDto->getAge();
+$date = $myDto->get('date'); // Same as$myDto->getDate();
 ```
 
-The only public methods accepted are DTO parameter accessors in the form "getParameter()"
+Access to DTO attributes can be done in three different ways
 
-Access to DTO parameters can be done by the "get" method or with a little help of magic __call method. If you plan to use __the call feature it's best to annotate this magic accessors at class level with `@method` phpDoc tag, this will help your IDE auto-completion
+* By using the "get" method
+* By defining a getter method in the form "getAttribute()" (the only allowed public methods). Great for transforming values if you are using AbstractScalarDTO as shown in the example above
+* Or by the magic method "__call" in the form "getAttribute()"". If you plan to use this feature it's best to annotate the magic getters at class level with `@method` phpDoc tag; this will help your IDE auto-completion
 
-The difference between `Gears\DTO\AbstractDTO` and `Gears\DTO\AbstractScalarDTO` is that the later ensures all payload is either a scalar value (null, string, int, float or bool) or an array of scalar values. Its purpose is to ensure the object can be securely serialized, it is the perfect match to create Domain Events, or Commands/Queries for CQRS
-
+### Collections
 Finally `Gears\DTO\AbstractDTOCollection` is a special type of DTO that only accepts a list of elements, being these elements implementations of DTO interface itself. This object is meant to be used as a return value when several DTOs should be returned, for example from a DDBB query result
+
+### Standalone usage
+
+Alternatively you can use PayloadBehaviour trait in any object you want to have immutable DTO functionality
+
+```php
+use Gears\DTO\DTO;
+use Gears\DTO\PayloadBehaviour;
+
+final class MyDTO implements DTO
+{
+    use PayloadBehaviour;
+
+    private $value;
+
+    public function __construct(int $value)
+    {
+        $this->setPayload(['value' => $value]);
+    }
+
+    final public function getAllowedInterfaces(): array
+    {
+        return [DTO::class];
+    }
+}
+```
 
 ## Contributing
 

@@ -28,12 +28,12 @@ class AbstractDTOStub extends AbstractDTO
     protected $parameter;
 
     /**
-     * @param mixed[] $parameters
+     * @param iterable $payload
      *
      * @return static
      */
-    public static function fromArray(array $parameters)
+    public static function fromArray(iterable $payload)
     {
-        return new static($parameters);
+        return new static($payload);
     }
 }

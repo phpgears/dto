@@ -26,7 +26,7 @@ trait PayloadBehaviour
 {
     use ImmutabilityBehaviour {
         __call as private immutabilityCall;
-        getImmutabilityAllowedPublicMethods as private privateGetImmutabilityAllowedPublicMethods;
+        getImmutabilityAllowedPublicMethods as private defaultGetImmutabilityAllowedPublicMethods;
     }
 
     /**
@@ -44,9 +44,9 @@ trait PayloadBehaviour
     /**
      * Set payload.
      *
-     * @param array<string, mixed> $parameters
+     * @param array<string, mixed> $payload
      */
-    private function setPayload(array $parameters): void
+    private function setPayload(array $payload): void
     {
         $this->assertPayloadSingleCall();
 
@@ -61,14 +61,7 @@ trait PayloadBehaviour
         }
 
         $reflection = new \ReflectionClass($this);
-
-        foreach ($parameters as $parameter => $value) {
-            if (!\in_array($parameter, static::$payloadDefinitionMap[$class], true)) {
-                throw new InvalidParameterException(
-                    \sprintf('Payload parameter "%s" on "%s" does not exist', $parameter, static::class)
-                );
-            }
-
+        foreach ($payload as $parameter => $value) {
             $this->setPayloadParameter($reflection, $parameter, $value);
         }
     }
@@ -82,6 +75,12 @@ trait PayloadBehaviour
      */
     private function setPayloadParameter(\ReflectionClass $reflection, string $parameter, $value): void
     {
+        if (!\in_array($parameter, static::$payloadDefinitionMap[static::class], true)) {
+            throw new InvalidParameterException(
+                \sprintf('Payload parameter "%s" on "%s" does not exist', $parameter, static::class)
+            );
+        }
+
         $property = $reflection->getProperty($parameter);
         $property->setAccessible(true);
         $property->setValue($this, $value);
@@ -189,7 +188,7 @@ trait PayloadBehaviour
     private function getImmutabilityAllowedPublicMethods(): array
     {
         $allowedPublicMethods = \array_unique(\array_merge(
-            $this->privateGetImmutabilityAllowedPublicMethods(),
+            $this->defaultGetImmutabilityAllowedPublicMethods(),
             \array_map(
                 static function (string $parameter): string {
                     return 'get' . \ucfirst($parameter);

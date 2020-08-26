@@ -24,7 +24,7 @@ class AbstractDTOTest extends TestCase
 {
     public function testPayload(): void
     {
-        $stub = AbstractDTOStub::fromArray(['parameter' => 100]);
+        $stub = AbstractDTOStub::fromArray(new \ArrayIterator(['parameter' => 100]));
 
         static::assertSame(100, $stub->get('parameter'));
         static::assertSame(100, $stub->getParameter());
