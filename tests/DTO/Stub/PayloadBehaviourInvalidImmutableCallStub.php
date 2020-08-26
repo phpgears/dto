@@ -21,14 +21,19 @@ use Gears\DTO\PayloadBehaviour;
  *
  * @method getParameter()
  */
-class PayloadBehaviourInvalidCallStub implements DTO
+class PayloadBehaviourInvalidImmutableCallStub implements DTO
 {
     use PayloadBehaviour;
 
-    public static function instantiate(): void
+    /**
+     * PayloadTraitStub constructor.
+     *
+     * @param array<string, mixed> $parameters
+     */
+    public function __construct(array $parameters)
     {
-        $dto = new static();
-        $dto->setPayload([]);
+        $this->assertImmutable();
+        $this->setPayload($parameters);
     }
 
     protected function getAllowedInterfaces(): array

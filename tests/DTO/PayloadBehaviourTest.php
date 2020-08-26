@@ -18,6 +18,7 @@ use Gears\DTO\Exception\InvalidMethodCallException;
 use Gears\DTO\Exception\InvalidParameterException;
 use Gears\DTO\Tests\Stub\PayloadBehaviourExtendedStub;
 use Gears\DTO\Tests\Stub\PayloadBehaviourInvalidCallStub;
+use Gears\DTO\Tests\Stub\PayloadBehaviourInvalidImmutableCallStub;
 use Gears\DTO\Tests\Stub\PayloadBehaviourStub;
 use Gears\Immutability\Exception\ImmutabilityViolationException;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +35,7 @@ class PayloadBehaviourTest extends TestCase
             '/^Immutability check available only through "setPayload" method, called from ".+::__construct"$/'
         );
 
-        new PayloadBehaviourInvalidCallStub([]);
+        new PayloadBehaviourInvalidImmutableCallStub([]);
     }
 
     public function testNoImmutabilityChecked(): void
@@ -47,14 +48,24 @@ class PayloadBehaviourTest extends TestCase
         PayloadBehaviourStub::callImmutableAssertion();
     }
 
-    public function testNoPayloadAssertion(): void
+    public function testSingleCall(): void
     {
         $this->expectException(DTOViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^DTO payload set available only through ".+" methods, called from ".+::testPayload"$/'
+            '/^Payload already set for DTO ".+"$/'
         );
 
         PayloadBehaviourStub::callPayload();
+    }
+
+    public function testInvalidCall(): void
+    {
+        $this->expectException(DTOViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^DTO payload set available only through ".+" methods, called from ".+::instantiate"$/'
+        );
+
+        PayloadBehaviourInvalidCallStub::instantiate();
     }
 
     public function testPayload(): void

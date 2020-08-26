@@ -33,7 +33,7 @@ trait ScalarPayloadBehaviour
      */
     private function setPayloadParameter(\ReflectionClass $reflection, string $parameter, $value): void
     {
-        $this->checkParameterType($value);
+        $this->assertPayloadParameterType($value);
 
         $this->defaultSetPayloadParameter($reflection, $parameter, $value);
     }
@@ -45,7 +45,7 @@ trait ScalarPayloadBehaviour
      *
      * @throws InvalidScalarParameterException
      */
-    final protected function checkParameterType($value): void
+    final protected function assertPayloadParameterType($value): void
     {
         if ($value instanceof DTO) {
             $value = $value->getPayload();
@@ -53,7 +53,7 @@ trait ScalarPayloadBehaviour
 
         if (\is_array($value)) {
             foreach ($value as $val) {
-                $this->checkParameterType($val);
+                $this->assertPayloadParameterType($val);
             }
         } elseif ($value !== null && !\is_scalar($value)) {
             throw new InvalidScalarParameterException(\sprintf(

@@ -4,8 +4,3 @@ parameters:
     - src
   ignoreErrors:
     - '/^Method Gears\\DTO\\Abstract(Scalar)?DTO(Collection)?::setPayloadParameter\(\) has parameter \$reflection with generic class ReflectionClass but does not specify its types: T/'
-    - '/^Method Gears\\DTO\\Abstract(Scalar)?DTO(Collection)?::getPayloadDefinition\(\) has parameter \$reflection with generic class ReflectionClass but does not specify its types: T/'
-    - message: '/^Variable method call on \$this\(Gears\\DTO\\Abstract(Scalar)?DTO(Collection)?\)\.$/'
-      path: src/PayloadBehaviour.php
-    - message: '/^Method Gears\\DTO\\AbstractDTOCollection::getIterator\(\) return type has no value type specified in iterable type Traversable<mixed, mixed>\.$/'
-      path: src/PayloadCollectionBehaviour.php

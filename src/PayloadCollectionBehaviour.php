@@ -47,7 +47,7 @@ trait PayloadCollectionBehaviour
             ));
         }
 
-        $this->assertElementsType($value);
+        $this->assertPayloadElementsType($value);
 
         $this->defaultSetPayloadParameter($reflection, $parameter, new \ArrayIterator($value));
     }
@@ -60,7 +60,7 @@ trait PayloadCollectionBehaviour
      * @throws InvalidCollectionTypeException
      * @throws InvalidParameterException
      */
-    private function assertElementsType(array $elements): void
+    private function assertPayloadElementsType(array $elements): void
     {
         $allowedType = $this->getAllowedType();
         if ($allowedType !== DTO::class
