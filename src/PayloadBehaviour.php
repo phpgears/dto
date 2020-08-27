@@ -49,15 +49,14 @@ trait PayloadBehaviour
     final protected function setPayload(array $payload): void
     {
         $this->assertPayloadSingleCall();
+        $this->assertPayloadCallConstraints();
 
         $class = static::class;
-
         if (!isset(static::$payloadDefinitionMap[$class])) {
-            $this->assertPayloadCallConstraints();
-
             static::$payloadDefinitionMap[$class] = $this->getPayloadDefinition();
 
-            $this->assertImmutable();
+            $this->assertImmutabilityPropertyVisibility();
+            $this->assertImmutabilityMethodVisibility();
         }
 
         $reflection = new \ReflectionClass($this);
@@ -72,6 +71,8 @@ trait PayloadBehaviour
      * @param \ReflectionClass $reflection
      * @param string           $parameter
      * @param mixed            $value
+     *
+     * @throws InvalidParameterException
      */
     private function setPayloadParameter(\ReflectionClass $reflection, string $parameter, $value): void
     {
@@ -87,33 +88,9 @@ trait PayloadBehaviour
     }
 
     /**
-     * Get payload definition.
-     *
-     * @return string[]
-     */
-    private function getPayloadDefinition(): array
-    {
-        $excludedProperties = \array_filter(\array_map(
-            static function (\ReflectionProperty $property): ?string {
-                return !$property->isStatic() ? $property->getName() : null;
-            },
-            (new \ReflectionClass(PayloadBehaviour::class))->getProperties()
-        ));
-
-        return \array_filter(\array_map(
-            static function (\ReflectionProperty $property) use ($excludedProperties): ?string {
-                return !$property->isStatic() && !\in_array($property->getName(), $excludedProperties, true)
-                    ? $property->getName()
-                    : null;
-            },
-            (new \ReflectionClass($this))->getProperties()
-        ));
-    }
-
-    /**
      * Assert single call.
      *
-     * @throws ImmutabilityViolationException
+     * @throws DTOViolationException
      */
     private function assertPayloadSingleCall(): void
     {
@@ -164,42 +141,27 @@ trait PayloadBehaviour
     }
 
     /**
-     * {@inheritdoc}
-     * Replace original to only accept call from setPayload().
-     */
-    private function assertImmutabilityCallConstraints(): void
-    {
-        $stack = $this->getImmutabilityFilteredCallStack();
-
-        if (!isset($stack[1]) || $stack[1]['function'] !== 'setPayload') {
-            throw new ImmutabilityViolationException(\sprintf(
-                'Immutability check available only through "setPayload" method, called from "%s"',
-                isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
-            ));
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     * Extend original to allow payload getters.
+     * Get payload definition.
      *
      * @return string[]
      */
-    private function getImmutabilityAllowedPublicMethods(): array
+    private function getPayloadDefinition(): array
     {
-        $allowedPublicMethods = \array_unique(\array_merge(
-            $this->defaultGetImmutabilityAllowedPublicMethods(),
-            \array_map(
-                static function (string $parameter): string {
-                    return 'get' . \ucfirst($parameter);
-                },
-                static::$payloadDefinitionMap[static::class]
-            )
+        $excludedProperties = \array_filter(\array_map(
+            static function (\ReflectionProperty $property): ?string {
+                return !$property->isStatic() ? $property->getName() : null;
+            },
+            (new \ReflectionClass(PayloadBehaviour::class))->getProperties()
         ));
 
-        \sort($allowedPublicMethods);
-
-        return $allowedPublicMethods;
+        return \array_filter(\array_map(
+            static function (\ReflectionProperty $property) use ($excludedProperties): ?string {
+                return !$property->isStatic() && !\in_array($property->getName(), $excludedProperties, true)
+                    ? $property->getName()
+                    : null;
+            },
+            (new \ReflectionClass($this))->getProperties()
+        ));
     }
 
     /**
@@ -295,5 +257,44 @@ trait PayloadBehaviour
         return \in_array(\lcfirst($parameter), static::$payloadDefinitionMap[static::class], true)
             ? $this->get(\lcfirst($parameter))
             : $this->get($parameter);
+    }
+
+    /**
+     * {@inheritdoc}
+     * Replace original to forbid usage.
+     *
+     * @throws ImmutabilityViolationException
+     */
+    final protected function assertImmutable(): void
+    {
+        $stack = $this->getImmutabilityFilteredCallStack();
+
+        throw new ImmutabilityViolationException(\sprintf(
+            'Immutability check available only through "setPayload" method, called from "%s"',
+            isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     * Extend original to allow payload getters.
+     *
+     * @return string[]
+     */
+    private function getImmutabilityAllowedPublicMethods(): array
+    {
+        $allowedPublicMethods = \array_unique(\array_merge(
+            $this->defaultGetImmutabilityAllowedPublicMethods(),
+            \array_map(
+                static function (string $parameter): string {
+                    return 'get' . \ucfirst($parameter);
+                },
+                static::$payloadDefinitionMap[static::class]
+            )
+        ));
+
+        \sort($allowedPublicMethods);
+
+        return $allowedPublicMethods;
     }
 }

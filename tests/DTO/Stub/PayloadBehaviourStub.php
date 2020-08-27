@@ -39,17 +39,6 @@ class PayloadBehaviourStub implements DTO
         $this->setPayload($payload);
     }
 
-    protected function testImmutable(): void
-    {
-        $this->assertImmutable();
-    }
-
-    public static function callImmutableAssertion(): void
-    {
-        $dto = new static([]);
-        $dto->testImmutable();
-    }
-
     protected function testPayload(): void
     {
         $this->setPayload([]);

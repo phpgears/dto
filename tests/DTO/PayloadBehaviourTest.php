@@ -38,16 +38,6 @@ class PayloadBehaviourTest extends TestCase
         new PayloadBehaviourInvalidImmutableCallStub([]);
     }
 
-    public function testNoImmutabilityChecked(): void
-    {
-        $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessage(
-            'Class "Gears\DTO\Tests\Stub\PayloadBehaviourStub" was already checked for immutability'
-        );
-
-        PayloadBehaviourStub::callImmutableAssertion();
-    }
-
     public function testSingleCall(): void
     {
         $this->expectException(DTOViolationException::class);
