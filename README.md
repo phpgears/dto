@@ -38,7 +38,7 @@ Quickly create plain immutable Data Transfer Objects by extending `Gears\DTO\Abs
 
 All the abstract classes have protected constructors that forces you to create "named constructors" in which you get to type-hint all your DTO attributes
 
-The difference between `Gears\DTO\AbstractDTO` and `Gears\DTO\AbstractScalarDTO` is that the later verifies that all attributes are either a scalar value (null, string, int, float or bool) or an array of scalar values. Its purpose is to ensure the object can be securely serialized/unserialized, and is perfect to create Domain Events, or Commands/Queries for CQRS
+The difference between `Gears\DTO\AbstractDTO` and `Gears\DTO\AbstractScalarDTO` is that the later verifies that all attributes are either a scalar value (null, string, int, float or bool) or an array of scalar values. Its purpose is to ensure the object can be securely serialized/unserialized. It's perfect for creating Domain Events or Commands and Queries for CQRS
 
 ```php
 use Gears\DTO\AbstractScalarDTO;

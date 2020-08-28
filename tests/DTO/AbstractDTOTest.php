@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests;
 
-use Gears\DTO\Exception\DTOException;
 use Gears\DTO\Tests\Stub\AbstractDTOStub;
 use PHPUnit\Framework\TestCase;
 
@@ -29,21 +28,5 @@ class AbstractDTOTest extends TestCase
         static::assertSame(100, $stub->get('parameter'));
         static::assertSame(100, $stub->getParameter());
         static::assertEquals(['parameter' => 100], $stub->getPayload());
-    }
-
-    public function testNoSerialization(): void
-    {
-        $this->expectException(DTOException::class);
-        $this->expectExceptionMessage('DTO "Gears\DTO\Tests\Stub\AbstractDTOStub" cannot be serialized');
-
-        \serialize(AbstractDTOStub::fromArray([]));
-    }
-
-    public function testNoDeserialization(): void
-    {
-        $this->expectException(DTOException::class);
-        $this->expectExceptionMessage('DTO "Gears\DTO\Tests\Stub\AbstractDTOStub" cannot be unserialized');
-
-        \unserialize('O:36:"Gears\DTO\Tests\Stub\AbstractDTOStub":0:{}');
     }
 }

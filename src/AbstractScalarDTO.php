@@ -43,7 +43,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
     /**
      * @return array<string, mixed>
      */
-    final public function __serialize(): array
+    public function __serialize(): array
     {
         return ['payload' => $this->getPayloadRaw()];
     }
@@ -53,7 +53,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    final public function __unserialize(array $data): void
+    public function __unserialize(array $data): void
     {
         $this->setPayload($data['payload']);
     }
@@ -61,7 +61,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
     /**
      * {@inheritdoc}
      */
-    final public function serialize(): string
+    public function serialize(): string
     {
         return \serialize($this->getPayloadRaw());
     }
@@ -71,7 +71,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
      *
      * @param mixed $serialized
      */
-    final public function unserialize($serialized): void
+    public function unserialize($serialized): void
     {
         $this->setPayload(\unserialize($serialized, ['allowed_classes' => false]));
     }
