@@ -60,7 +60,7 @@ class PayloadBehaviourTest extends TestCase
 
     public function testPayload(): void
     {
-        $stub = new PayloadBehaviourStub(['parameter' => 100, 'value' => 'myValue']);
+        $stub = new PayloadBehaviourStub(new \ArrayIterator(['parameter' => 100, 'value' => 'myValue']));
 
         static::assertSame(100, $stub->get('parameter'));
         static::assertSame(100, $stub->getParameter());

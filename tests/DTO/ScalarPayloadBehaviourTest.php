@@ -44,10 +44,10 @@ class ScalarPayloadBehaviourTest extends TestCase
 
     public function testPayload(): void
     {
-        $stub = new ScalarPayloadBehaviourStub([
+        $stub = new ScalarPayloadBehaviourStub(new \ArrayIterator([
             'parameter' => [100],
             'value' => 'myValue',
-        ]);
+        ]));
 
         static::assertSame([100], $stub->get('parameter'));
         static::assertSame([100], $stub->getParameter());

@@ -27,7 +27,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
      */
     final protected function __construct(iterable $payload)
     {
-        $this->setPayload(\is_array($payload) ? $payload : \iterator_to_array($payload));
+        $this->setPayload($payload);
     }
 
     /**

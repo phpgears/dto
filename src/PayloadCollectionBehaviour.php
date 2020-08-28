@@ -26,7 +26,9 @@ trait PayloadCollectionBehaviour
     }
 
     /**
-     * @var \ArrayIterator<int, DTO>
+     * Collection elements list.
+     *
+     * @var DTO[]
      */
     protected $elements;
 
@@ -57,7 +59,7 @@ trait PayloadCollectionBehaviour
 
         $this->assertPayloadElementsType($value);
 
-        $this->defaultSetPayloadParameter($reflection, $parameter, new \ArrayIterator($value));
+        $this->defaultSetPayloadParameter($reflection, $parameter, $value);
     }
 
     /**
@@ -99,7 +101,7 @@ trait PayloadCollectionBehaviour
      */
     final public function getElements(): \Traversable
     {
-        return $this->elements;
+        return new \ArrayIterator($this->elements);
     }
 
     /**
@@ -109,7 +111,7 @@ trait PayloadCollectionBehaviour
      */
     final public function getIterator(): \Traversable
     {
-        return $this->elements;
+        return new \ArrayIterator($this->elements);
     }
 
     /**

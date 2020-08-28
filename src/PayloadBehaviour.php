@@ -44,9 +44,9 @@ trait PayloadBehaviour
     /**
      * Set payload.
      *
-     * @param array<string, mixed> $payload
+     * @param iterable<mixed> $payload
      */
-    final protected function setPayload(array $payload): void
+    final protected function setPayload(iterable $payload): void
     {
         $this->assertPayloadSingleCall();
         $this->assertPayloadCallConstraints();
@@ -61,7 +61,7 @@ trait PayloadBehaviour
 
         $reflection = new \ReflectionClass($this);
         foreach ($payload as $parameter => $value) {
-            $this->setPayloadParameter($reflection, $parameter, $value);
+            $this->setPayloadParameter($reflection, (string) $parameter, $value);
         }
     }
 
