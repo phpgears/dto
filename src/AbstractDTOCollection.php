@@ -29,9 +29,7 @@ abstract class AbstractDTOCollection implements DTOCollection
      */
     final protected function __construct(iterable $elements)
     {
-        $this->setPayload([
-            'elements' => \is_array($elements) ? \array_values($elements) : \iterator_to_array($elements),
-        ]);
+        $this->setPayload(['elements' => $elements]);
     }
 
     /**

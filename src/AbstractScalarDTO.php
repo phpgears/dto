@@ -45,7 +45,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
      */
     final public function __serialize(): array
     {
-        return ['payload' => $this->getPayloadToSerialize()];
+        return ['payload' => $this->getPayloadRaw()];
     }
 
     /**
@@ -63,7 +63,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
      */
     final public function serialize(): string
     {
-        return \serialize($this->getPayloadToSerialize());
+        return \serialize($this->getPayloadRaw());
     }
 
     /**

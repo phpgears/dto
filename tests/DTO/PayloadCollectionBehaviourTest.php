@@ -57,7 +57,15 @@ class PayloadCollectionBehaviourTest extends TestCase
             '/^Only "elements" parameter allowed in ".+", "invalid" given$/'
         );
 
-        PayloadCollectionBehaviourStub::fromInvalidParameter('invalid', []);
+        PayloadCollectionBehaviourStub::fromInvalid('invalid', []);
+    }
+
+    public function testInvalidValue(): void
+    {
+        $this->expectException(InvalidParameterException::class);
+        $this->expectExceptionMessage('"elements" parameter should be an iterable, "string" given');
+
+        PayloadCollectionBehaviourStub::fromInvalid('elements', 'invalid');
     }
 
     public function testInvalidElement(): void

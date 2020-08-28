@@ -61,11 +61,11 @@ trait ScalarPayloadBehaviour
     }
 
     /**
-     * Get payload to be serialized.
+     * Get raw payload.
      *
-     * @return mixed[]
+     * @return array<string, mixed>
      */
-    private function getPayloadToSerialize(): array
+    final protected function getPayloadRaw(): array
     {
         $reflection = new \ReflectionClass($this);
 

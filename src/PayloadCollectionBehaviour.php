@@ -47,6 +47,14 @@ trait PayloadCollectionBehaviour
             ));
         }
 
+        if (!\is_iterable($value)) {
+            throw new InvalidParameterException(\sprintf(
+                '"elements" parameter should be an iterable, "%s" given',
+                \is_object($value) ? \get_class($value) : \gettype($value)
+            ));
+        }
+        $value = \array_values(\is_array($value) ? $value : \iterator_to_array($value));
+
         $this->assertPayloadElementsType($value);
 
         $this->defaultSetPayloadParameter($reflection, $parameter, new \ArrayIterator($value));

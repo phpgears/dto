@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Gears\DTO\Tests\Stub;
 
-use Gears\DTO\DTO;
 use Gears\DTO\DTOCollection;
 use Gears\DTO\Exception\InvalidParameterException;
 use Gears\DTO\PayloadCollectionBehaviour;
@@ -28,13 +27,13 @@ class PayloadCollectionBehaviourInvalidTypeStub implements DTOCollection
     /**
      * PayloadCollectionBehaviourStub constructor.
      *
-     * @param string        $parameter
-     * @param iterable<DTO> $elements
+     * @param string $parameter
+     * @param mixed  $elements
      */
-    protected function __construct(string $parameter, iterable $elements)
+    protected function __construct(string $parameter, $elements)
     {
         $this->setPayload([
-            $parameter => \is_array($elements) ? \array_values($elements) : \iterator_to_array($elements),
+            $parameter => $elements,
         ]);
     }
 
