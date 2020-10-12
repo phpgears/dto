@@ -33,7 +33,7 @@ abstract class AbstractDTOCollection implements DTOCollection
     /**
      * {@inheritdoc}
      */
-    final public static function fromElements(iterable $elements): DTOCollection
+    final public static function fromElements(iterable $elements)
     {
         return new static($elements);
     }

@@ -25,9 +25,9 @@ interface DTOCollection extends DTO, \IteratorAggregate
      *
      * @param iterable<DTO> $elements
      *
-     * @return self
+     * @return static
      */
-    public static function fromElements(iterable $elements): self;
+    public static function fromElements(iterable $elements);
 
     /**
      * Get elements as traversable.
