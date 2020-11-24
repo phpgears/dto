@@ -26,7 +26,7 @@ class AbstractScalarDTOTest extends TestCase
     {
         $this->expectException(InvalidScalarParameterException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given$/'
+            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given\.$/'
         );
 
         AbstractScalarDTOStub::fromArray(['parameter' => new \stdClass()]);

@@ -71,12 +71,12 @@ abstract class AbstractDTOCollection implements DTOCollection
      */
     final public function __sleep(): array
     {
-        throw new DTOException(\sprintf('DTO collection "%s" cannot be serialized', static::class));
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be serialized.', static::class));
     }
 
     final public function __wakeup(): void
     {
-        throw new DTOException(\sprintf('DTO collection "%s" cannot be unserialized', static::class));
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be unserialized.', static::class));
     }
 
     /**
@@ -84,7 +84,7 @@ abstract class AbstractDTOCollection implements DTOCollection
      */
     final public function __serialize(): array
     {
-        throw new DTOException(\sprintf('DTO collection "%s" cannot be serialized', static::class));
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be serialized.', static::class));
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class AbstractDTOCollection implements DTOCollection
      */
     final public function __unserialize(array $data): void
     {
-        throw new DTOException(\sprintf('DTO collection "%s" cannot be unserialized', static::class));
+        throw new DTOException(\sprintf('DTO collection "%s" cannot be unserialized.', static::class));
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class AbstractDTOCollection implements DTOCollection
             && (!\class_exists($allowedType) || !\in_array(DTO::class, \class_implements($allowedType), true))
         ) {
             throw new InvalidCollectionTypeException(\sprintf(
-                'Allowed class type for "%s" should be a "%s", "%s" given',
+                'Allowed class type for "%s" should be a "%s", "%s" given.',
                 static::class,
                 DTO::class,
                 $allowedType
@@ -122,7 +122,7 @@ abstract class AbstractDTOCollection implements DTOCollection
         foreach ($elements as $element) {
             if (!\is_object($element) || !\is_a($element, $allowedType)) {
                 throw new InvalidParameterException(\sprintf(
-                    'All elements of "%s" should be instances of "%s", "%s" given',
+                    'All elements of "%s" should be instances of "%s", "%s" given.',
                     static::class,
                     $allowedType,
                     \is_object($element) ? \get_class($element) : \gettype($element)

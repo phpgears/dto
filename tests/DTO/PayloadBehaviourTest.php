@@ -49,7 +49,7 @@ class PayloadBehaviourTest extends TestCase
     public function testNonExistentPayload(): void
     {
         $this->expectException(InvalidParameterException::class);
-        $this->expectExceptionMessageRegExp('/^Payload parameter "attribute" on ".+" does not exist$/');
+        $this->expectExceptionMessageRegExp('/^Payload parameter "attribute" on ".+" does not exist\.$/');
 
         $stub = new PayloadBehaviourStub([]);
 
@@ -59,7 +59,7 @@ class PayloadBehaviourTest extends TestCase
     public function testUnknownMethod(): void
     {
         $this->expectException(InvalidMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/^Method ".+::unknownMethod" does not exist$/');
+        $this->expectExceptionMessageRegExp('/^Method ".+::unknownMethod" does not exist\.$/');
 
         $stub = new PayloadBehaviourStub([]);
 
@@ -69,7 +69,7 @@ class PayloadBehaviourTest extends TestCase
     public function testInvalidMethodArguments(): void
     {
         $this->expectException(InvalidMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/^Method ".+::getParameter" should be called with no parameters$/');
+        $this->expectExceptionMessageRegExp('/^Method ".+::getParameter" should be called with no parameters\.$/');
 
         $stub = new PayloadBehaviourStub([]);
 

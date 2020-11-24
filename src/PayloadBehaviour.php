@@ -76,7 +76,7 @@ trait PayloadBehaviour
     {
         if (!\array_key_exists($parameter, $this->payload)) {
             throw new InvalidParameterException(\sprintf(
-                'Payload parameter "%s" on "%s" does not exist',
+                'Payload parameter "%s" on "%s" does not exist.',
                 $parameter,
                 static::class
             ));
@@ -129,13 +129,13 @@ trait PayloadBehaviour
     {
         if (\preg_match('/^(has|get)([A-Z][a-zA-Z0-9-_]*)$/', $methodName, $matches) !== 1) {
             throw new InvalidMethodCallException(
-                \sprintf('Method "%s::%s" does not exist', static::class, $methodName)
+                \sprintf('Method "%s::%s" does not exist.', static::class, $methodName)
             );
         }
 
         if (\count($arguments) !== 0) {
             throw new InvalidMethodCallException(\sprintf(
-                'Method "%s::%s" should be called with no parameters',
+                'Method "%s::%s" should be called with no parameters.',
                 static::class,
                 $methodName
             ));

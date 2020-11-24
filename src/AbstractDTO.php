@@ -42,12 +42,12 @@ abstract class AbstractDTO implements DTO
      */
     final public function __sleep(): array
     {
-        throw new DTOException(\sprintf('DTO "%s" cannot be serialized', static::class));
+        throw new DTOException(\sprintf('DTO "%s" cannot be serialized.', static::class));
     }
 
     final public function __wakeup(): void
     {
-        throw new DTOException(\sprintf('DTO "%s" cannot be unserialized', static::class));
+        throw new DTOException(\sprintf('DTO "%s" cannot be unserialized.', static::class));
     }
 
     /**
@@ -55,7 +55,7 @@ abstract class AbstractDTO implements DTO
      */
     final public function __serialize(): array
     {
-        throw new DTOException(\sprintf('DTO "%s" cannot be serialized', static::class));
+        throw new DTOException(\sprintf('DTO "%s" cannot be serialized.', static::class));
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class AbstractDTO implements DTO
      */
     final public function __unserialize(array $data): void
     {
-        throw new DTOException(\sprintf('DTO "%s" cannot be unserialized', static::class));
+        throw new DTOException(\sprintf('DTO "%s" cannot be unserialized.', static::class));
     }
 
     /**

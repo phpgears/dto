@@ -2,7 +2,7 @@
 [![Latest Version](https://img.shields.io/packagist/v/phpgears/dto.svg?style=flat-square)](https://packagist.org/packages/phpgears/dto)
 [![License](https://img.shields.io/github/license/phpgears/dto.svg?style=flat-square)](https://github.com/phpgears/dto/blob/master/LICENSE)
 
-[![Build Status](https://img.shields.io/travis/phpgears/dto.svg?style=flat-square)](https://travis-ci.org/phpgears/dto)
+[![Build Status](https://img.shields.io/travis/com/phpgears/dto.svg?style=flat-square)](https://travis-ci.com/github/phpgears/dto)
 [![Style Check](https://styleci.io/repos/148840961/shield)](https://styleci.io/repos/148840961)
 [![Code Quality](https://img.shields.io/scrutinizer/g/phpgears/dto.svg?style=flat-square)](https://scrutinizer-ci.com/g/phpgears/dto)
 [![Code Coverage](https://img.shields.io/coveralls/phpgears/dto.svg?style=flat-square)](https://coveralls.io/github/phpgears/dto)

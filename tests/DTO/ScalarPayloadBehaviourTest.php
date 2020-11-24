@@ -26,7 +26,7 @@ class ScalarPayloadBehaviourTest extends TestCase
     {
         $this->expectException(InvalidScalarParameterException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given$/'
+            '/^Class ".+" can only accept scalar payload parameters, "stdClass" given\.$/'
         );
 
         new ScalarPayloadBehaviourStub(['parameter' => new \stdClass()]);

@@ -42,7 +42,7 @@ class AbstractDTOTest extends TestCase
     public function testNoSerialization(): void
     {
         $this->expectException(DTOException::class);
-        $this->expectExceptionMessage('DTO "Gears\DTO\Tests\Stub\AbstractDTOStub" cannot be serialized');
+        $this->expectExceptionMessage('DTO "Gears\DTO\Tests\Stub\AbstractDTOStub" cannot be serialized.');
 
         \serialize(AbstractDTOStub::fromArray([]));
     }
@@ -50,7 +50,7 @@ class AbstractDTOTest extends TestCase
     public function testNoDeserialization(): void
     {
         $this->expectException(DTOException::class);
-        $this->expectExceptionMessage('DTO "Gears\DTO\Tests\Stub\AbstractDTOStub" cannot be unserialized');
+        $this->expectExceptionMessage('DTO "Gears\DTO\Tests\Stub\AbstractDTOStub" cannot be unserialized.');
 
         \unserialize('O:36:"Gears\DTO\Tests\Stub\AbstractDTOStub":0:{}');
     }

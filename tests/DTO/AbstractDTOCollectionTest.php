@@ -30,7 +30,7 @@ class AbstractDTOCollectionTest extends TestCase
     {
         $this->expectException(InvalidCollectionTypeException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Allowed class type for ".+" should be a ".+", ".+\\InvalidParameterException" given$/'
+            '/^Allowed class type for ".+" should be a ".+", ".+\\InvalidParameterException" given\.$/'
         );
 
         AbstractDTOCollectionInvalidTypeStub::fromElements([]);
@@ -39,7 +39,7 @@ class AbstractDTOCollectionTest extends TestCase
     public function testInvalidElement(): void
     {
         $this->expectException(InvalidParameterException::class);
-        $this->expectExceptionMessageRegExp('/^All elements of ".+" should be instances of ".+", "stdClass" given$/');
+        $this->expectExceptionMessageRegExp('/^All elements of ".+" should be instances of ".+", "stdClass" given\.$/');
 
         AbstractDTOCollectionStub::fromElements([AbstractDTOStub::fromArray([]), new \stdClass()]);
     }
@@ -63,7 +63,7 @@ class AbstractDTOCollectionTest extends TestCase
     {
         $this->expectException(DTOException::class);
         $this->expectExceptionMessage(
-            'DTO collection "Gears\DTO\Tests\Stub\AbstractDTOCollectionStub" cannot be serialized'
+            'DTO collection "Gears\DTO\Tests\Stub\AbstractDTOCollectionStub" cannot be serialized.'
         );
 
         \serialize(AbstractDTOCollectionStub::fromElements([]));
@@ -73,7 +73,7 @@ class AbstractDTOCollectionTest extends TestCase
     {
         $this->expectException(DTOException::class);
         $this->expectExceptionMessage(
-            'DTO collection "Gears\DTO\Tests\Stub\AbstractDTOCollectionStub" cannot be unserialized'
+            'DTO collection "Gears\DTO\Tests\Stub\AbstractDTOCollectionStub" cannot be unserialized.'
         );
 
         \unserialize('O:46:"Gears\DTO\Tests\Stub\AbstractDTOCollectionStub":0:{}');

@@ -95,7 +95,7 @@ abstract class AbstractScalarDTO implements DTO, \Serializable
             }
         } elseif ($value !== null && !\is_scalar($value)) {
             throw new InvalidScalarParameterException(\sprintf(
-                'Class "%s" can only accept scalar payload parameters, "%s" given',
+                'Class "%s" can only accept scalar payload parameters, "%s" given.',
                 self::class,
                 \is_object($value) ? \get_class($value) : \gettype($value)
             ));
