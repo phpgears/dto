@@ -80,7 +80,7 @@ trait PayloadBehaviour
     {
         if (!\in_array($parameter, static::$payloadDefinitionMap[static::class], true)) {
             throw new InvalidParameterException(
-                \sprintf('Payload parameter "%s" on "%s" does not exist', $parameter, static::class)
+                \sprintf('Payload parameter "%s" on "%s" does not exist.', $parameter, static::class)
             );
         }
 
@@ -97,7 +97,7 @@ trait PayloadBehaviour
     private function assertPayloadSingleCall(): void
     {
         if ($this->payloadAlreadySet) {
-            throw new DTOViolationException(\sprintf('Payload already set for DTO "%s"', static::class));
+            throw new DTOViolationException(\sprintf('Payload already set for DTO "%s".', static::class));
         }
 
         $this->payloadAlreadySet = true;
@@ -119,7 +119,7 @@ trait PayloadBehaviour
 
         if (!isset($stack[1]) || !\in_array($stack[1]['function'], $callingMethods, true)) {
             throw new DTOViolationException(\sprintf(
-                'DTO payload set available only through "%s" methods, called from "%s"',
+                'DTO payload set available only through "%s" methods, called from "%s".',
                 \implode('", "', $callingMethods),
                 isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
             ));
@@ -179,7 +179,7 @@ trait PayloadBehaviour
     {
         if (!\in_array($parameter, static::$payloadDefinitionMap[static::class], true)) {
             throw new InvalidParameterException(\sprintf(
-                'Payload parameter "%s" on "%s" does not exist',
+                'Payload parameter "%s" on "%s" does not exist.',
                 $parameter,
                 static::class
             ));
@@ -242,13 +242,13 @@ trait PayloadBehaviour
     {
         if (\preg_match('/^get(?P<parameter>[A-Z][a-zA-Z0-9-_]*)$/', $methodName, $matches) !== 1) {
             throw new InvalidMethodCallException(
-                \sprintf('Method "%s::%s" does not exist', static::class, $methodName)
+                \sprintf('Method "%s::%s" does not exist.', static::class, $methodName)
             );
         }
 
         if (\count($arguments) !== 0) {
             throw new InvalidMethodCallException(\sprintf(
-                'Method "%s::%s" should be called with no parameters',
+                'Method "%s::%s" should be called with no parameters.',
                 static::class,
                 $methodName
             ));
@@ -272,7 +272,7 @@ trait PayloadBehaviour
         $stack = $this->getImmutabilityFilteredCallStack();
 
         throw new ImmutabilityViolationException(\sprintf(
-            'Immutability check available only through "setPayload" method, called from "%s"',
+            'Immutability check available only through "setPayload" method, called from "%s".',
             isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
         ));
     }

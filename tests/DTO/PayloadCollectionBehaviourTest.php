@@ -30,7 +30,7 @@ class PayloadCollectionBehaviourTest extends TestCase
     {
         $this->expectException(InvalidCollectionTypeException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Allowed class type for ".+" should be a ".+", ".+\\InvalidParameterException" given$/'
+            '/^Allowed class type for ".+" should be a ".+", ".+\\InvalidParameterException" given\.$/'
         );
 
         PayloadCollectionBehaviourInvalidTypeStub::fromElements([]);
@@ -54,7 +54,7 @@ class PayloadCollectionBehaviourTest extends TestCase
     {
         $this->expectException(InvalidParameterException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Only "elements" parameter allowed in ".+", "invalid" given$/'
+            '/^Only "elements" parameter allowed in ".+", "invalid" given\.$/'
         );
 
         PayloadCollectionBehaviourStub::fromInvalid('invalid', []);
@@ -63,7 +63,7 @@ class PayloadCollectionBehaviourTest extends TestCase
     public function testInvalidValue(): void
     {
         $this->expectException(InvalidParameterException::class);
-        $this->expectExceptionMessage('"elements" parameter should be an iterable, "string" given');
+        $this->expectExceptionMessage('"elements" parameter should be an iterable, "string" given.');
 
         PayloadCollectionBehaviourStub::fromInvalid('elements', 'invalid');
     }
@@ -71,7 +71,7 @@ class PayloadCollectionBehaviourTest extends TestCase
     public function testInvalidElement(): void
     {
         $this->expectException(InvalidParameterException::class);
-        $this->expectExceptionMessageRegExp('/^All elements of ".+" should be instances of ".+", "stdClass" given$/');
+        $this->expectExceptionMessageRegExp('/^All elements of ".+" should be instances of ".+", "stdClass" given\.$/');
 
         AbstractDTOCollectionStub::fromElements([AbstractDTOStub::fromArray([]), new \stdClass()]);
     }

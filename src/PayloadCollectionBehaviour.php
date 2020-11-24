@@ -43,7 +43,7 @@ trait PayloadCollectionBehaviour
     {
         if ($parameter !== 'elements') {
             throw new InvalidParameterException(\sprintf(
-                'Only "elements" parameter allowed in "%s", "%s" given',
+                'Only "elements" parameter allowed in "%s", "%s" given.',
                 static::class,
                 $parameter
             ));
@@ -51,7 +51,7 @@ trait PayloadCollectionBehaviour
 
         if (!\is_iterable($value)) {
             throw new InvalidParameterException(\sprintf(
-                '"elements" parameter should be an iterable, "%s" given',
+                '"elements" parameter should be an iterable, "%s" given.',
                 \is_object($value) ? \get_class($value) : \gettype($value)
             ));
         }
@@ -77,7 +77,7 @@ trait PayloadCollectionBehaviour
             && (!\class_exists($allowedType) || !\in_array(DTO::class, \class_implements($allowedType), true))
         ) {
             throw new InvalidCollectionTypeException(\sprintf(
-                'Allowed class type for "%s" should be a "%s", "%s" given',
+                'Allowed class type for "%s" should be a "%s", "%s" given.',
                 static::class,
                 DTO::class,
                 $allowedType
@@ -87,7 +87,7 @@ trait PayloadCollectionBehaviour
         foreach ($elements as $element) {
             if (!\is_object($element) || !\is_a($element, $allowedType)) {
                 throw new InvalidParameterException(\sprintf(
-                    'All elements of "%s" should be instances of "%s", "%s" given',
+                    'All elements of "%s" should be instances of "%s", "%s" given.',
                     static::class,
                     $allowedType,
                     \is_object($element) ? \get_class($element) : \gettype($element)
